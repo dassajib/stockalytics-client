@@ -1,9 +1,10 @@
-import React, { useState, ReactNode } from 'react';
-import Header from '../components/Header/index';
-import Sidebar from '../components/Sidebar/index';
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-const DefaultLayout: React.FC<{ children: ReactNode }> = () => {
+import Header from '../components/Header/index';
+import Sidebar from '../components/Sidebar/index';
+
+const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
