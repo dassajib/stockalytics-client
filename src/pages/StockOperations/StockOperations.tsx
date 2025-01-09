@@ -212,14 +212,14 @@ const StockOperations = () => {
   ];
 
   return (
-    <div className="p-4 bg-boxdark">
+    <div className="p-4">
       <Input.Search
-        placeholder="Search by name or address"
+        placeholder="Search by Name"
         onChange={handleSearch}
         className="mb-4 w-full md:w-1/2"
       />
       <Table
-        className="w-full bg-white dark:bg-boxdark shadow-default rounded-lg"
+        className="w-full bg-boxdark shadow-default rounded-lg"
         dataSource={filteredData}
         columns={columns}
         pagination={{ pageSize: 10 }}

@@ -215,3 +215,8 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+
+.ant-table-container {
+  background-color: rgb(36 48 63 / var(--tw-bg-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
