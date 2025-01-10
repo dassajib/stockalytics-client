@@ -1,232 +1,116 @@
-import { useState } from 'react';
-import { Table, Input, Button, Space } from 'antd';
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import type { ColumnsType } from 'antd/es/table';
+import { Button, Input, Table } from 'antd';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
+import { BRAND } from '../../types/brand';
+import { ChangeEvent, useState } from 'react';
 
-const initialData: DataType[] = [
+const brandData: BRAND[] = [
   {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    name: 'Google',
+    visitors: 3.5,
+    revenues: '5,768',
+    sales: 590,
+    conversion: 4.8,
   },
   {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
+    name: 'Twitter',
+    visitors: 2.2,
+    revenues: '4,635',
+    sales: 467,
+    conversion: 4.3,
   },
   {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
+    name: 'Github',
+    visitors: 2.1,
+    revenues: '4,290',
+    sales: 420,
+    conversion: 3.7,
   },
   {
-    key: '4',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    name: 'Vimeo',
+    visitors: 1.5,
+    revenues: '3,580',
+    sales: 389,
+    conversion: 2.5,
   },
   {
-    key: '5',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '7',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '8',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '10',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '11',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
+    name: 'Facebook',
+    visitors: 3.5,
+    revenues: '6,768',
+    sales: 390,
+    conversion: 4.2,
   },
 ];
 
-const StockOperations = () => {
-  const [data, setData] = useState<DataType[]>(initialData);
-  const [editingKey, setEditingKey] = useState<string>('');
-  const [searchText, setSearchText] = useState<string>('');
+const columns = [
+  {
+    title: 'Source',
+    dataIndex: 'name',
+    key: 'name',
+    render: (text: string) => `${text}`,
+  },
+  {
+    title: 'Visitors',
+    dataIndex: 'visitors',
+    key: 'visitors',
+    render: (text: number) => `${text}K`,
+  },
+  {
+    title: 'Revenues',
+    dataIndex: 'revenues',
+    key: 'revenues',
+    render: (text: string) => `$${text}`,
+  },
+  {
+    title: 'Sales',
+    dataIndex: 'sales',
+    key: 'sales',
+  },
+  {
+    title: 'Conversion',
+    dataIndex: 'conversion',
+    key: 'conversion',
+    render: (text: number) => `${text}%`,
+  },
+];
 
-  const isEditing = (record: DataType) => record.key === editingKey;
+const TableOne = () => {
+  const [searchText, setSearchText] = useState('');
+  const [filteredData, setFilterData] = useState(brandData);
 
-  const edit = (record: Partial<DataType> & { key: React.Key }) => {
-    setEditingKey(record.key as string);
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setSearchText(value);
+    const filterRes = brandData.filter(
+      (item) =>
+        item.name.toLocaleLowerCase().includes(value) ||
+        item.revenues.toLocaleLowerCase().includes(value),
+    );
+    setFilterData(filterRes);
   };
-
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = (key: React.Key) => {
-    const newData = [...data];
-    const index = newData.findIndex((item) => key === item.key);
-    if (index > -1) {
-      const item = newData[index];
-      newData.splice(index, 1, { ...item, ...editingRow });
-      setEditingKey('');
-      setData(newData);
-    } else {
-      newData.push(editingRow);
-      setEditingKey('');
-      setData(newData);
-    }
-  };
-
-  const deleteRow = (key: React.Key) => {
-    setData(data.filter((item) => item.key !== key));
-  };
-
-  const [editingRow, setEditingRow] = useState<Partial<DataType>>({});
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, key: keyof DataType) => {
-    const newData = { ...editingRow };
-    newData[key] = e.target.value;
-    setEditingRow(newData);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value.toLowerCase());
-  };
-
-  const filteredData = data.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchText) ||
-      item.address.toLowerCase().includes(searchText)
-  );
-
-  const columns: ColumnsType<DataType> = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => {
-        return isEditing(record) ? (
-          <Input
-            className="w-full"
-            value={editingRow.name || text}
-            onChange={(e) => handleInputChange(e, 'name')}
-          />
-        ) : (
-          text
-        );
-      },
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      render: (text, record) => {
-        return isEditing(record) ? (
-          <Input
-            className="w-full"
-            value={editingRow.age || text}
-            onChange={(e) => handleInputChange(e, 'age')}
-          />
-        ) : (
-          text
-        );
-      },
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      render: (text, record) => {
-        return isEditing(record) ? (
-          <Input
-            className="w-full"
-            value={editingRow.address || text}
-            onChange={(e) => handleInputChange(e, 'address')}
-          />
-        ) : (
-          text
-        );
-      },
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <Space size="middle">
-            <Button className="bg-blue-500 text-white" onClick={() => save(record.key)}>Save</Button>
-            <Button className="bg-gray-500 text-white" onClick={cancel}>Cancel</Button>
-          </Space>
-        ) : (
-          <Space size="middle">
-            <Button className="bg-green-500 text-white" onClick={() => edit(record)}>
-              <FaRegEdit />
-            </Button>
-            <Button className="bg-red-500 text-white" onClick={() => deleteRow(record.key)}>
-              <MdDelete />
-            </Button>
-          </Space>
-        );
-      },
-    },
-  ];
 
   return (
-    <div className="p-4">
-      <Input.Search
-        placeholder="Search by Name"
-        onChange={handleSearch}
-        className="mb-4 w-full md:w-1/2"
-      />
+    <div className="rounded-sm bg-boxdark border border-stroke px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark sm:px-7.5 xl:pb-1">
+      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+        Stock Table
+      </h4>
+      <div className="flex justify-between items-center">
+        <Input
+          value={searchText}
+          onChange={handleSearch}
+          className="w-1/2 py-2"
+          placeholder="Search Your Data..."
+        />
+        <Button className="bg-blue-600 text-white border-none px-8 py-2">Add</Button>
+      </div>
       <Table
-        className="w-full bg-boxdark shadow-default rounded-lg"
-        dataSource={filteredData}
         columns={columns}
-        pagination={{ pageSize: 10 }}
-        rowClassName="editable-row"
+        dataSource={filteredData}
+        pagination={{ pageSize: 4 }}
+        rowKey="name"
+        className="custom-ant-table mt-5"
       />
     </div>
   );
 };
 
-export default StockOperations;
+export default TableOne;

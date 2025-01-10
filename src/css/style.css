@@ -216,7 +216,35 @@ span.flatpickr-weekday,
   display: none !important;
 }
 
-.ant-table-container {
-  background-color: rgb(36 48 63 / var(--tw-bg-opacity));
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+/* antd table */
+.custom-ant-table .ant-table {
+  border-collapse: collapse;
+  background: transparent;
+}
+
+.custom-ant-table .ant-table-thead > tr > th {
+  background-color: rgb(49 61 74 / var(--tw-bg-opacity));
+  color: white;
+  border-color: rgb(46 58 71 / var(--tw-border-opacity));
+  text-align: center;
+  font-weight: bold;
+}
+
+.custom-ant-table .ant-table-tbody > tr > td {
+  text-align: center;
+  color: white;
+  border-color: rgb(46 58 71 / var(--tw-border-opacity));
+  background: transparent;
+}
+
+.custom-ant-table .ant-table-tbody .ant-table-placeholder {
+  background: transparent !important;
+}
+
+.ant-empty-description {
+  color: white !important;
+}
+
+.ant-pagination-item-link {
+  color: white !important;
 }

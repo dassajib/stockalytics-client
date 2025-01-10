@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { FaGoogle } from "react-icons/fa";
-import { AiOutlineMail } from "react-icons/ai";
-import { GoLock } from "react-icons/go";
+import { FaGoogle } from 'react-icons/fa';
+import { AiOutlineMail } from 'react-icons/ai';
+import { GoLock } from 'react-icons/go';
 
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
