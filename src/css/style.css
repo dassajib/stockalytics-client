@@ -216,6 +216,16 @@ span.flatpickr-weekday,
   display: none !important;
 }
 
+:root {
+  --text-color: black;
+  --table-background-color: rgb(247 249 252 / var(--tw-bg-opacity));
+}
+
+.dark-mode {
+  --text-color: white;
+  --table-background-color: rgb(49 61 74 / var(--tw-bg-opacity)); 
+}
+
 /* antd table */
 .custom-ant-table .ant-table {
   border-collapse: collapse;
@@ -232,7 +242,7 @@ span.flatpickr-weekday,
 
 .custom-ant-table .ant-table-tbody > tr > td {
   text-align: center;
-  color: white;
+  color: var(--text-color);
   border-color: rgb(46 58 71 / var(--tw-border-opacity));
   background: transparent;
 }
