@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { Button, Input, Table } from 'antd';
-import { CloseOutlined } from '@ant-design/icons'; // Close icon
+import { CloseOutlined } from '@ant-design/icons';
 
 import { BRAND } from '../../types/brand';
 import { useModalStore } from '../../store/modalStore';
