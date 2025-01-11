@@ -32,12 +32,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ inputs, onSubmit }) => {
           />
         </div>
       ))}
-      <button
-        type="submit"
-        className="w-full mt-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300"
-      >
-        Submit
-      </button>
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300"
+        >
+          Submit
+        </button>
+      </div>
     </form>
   );
 };
