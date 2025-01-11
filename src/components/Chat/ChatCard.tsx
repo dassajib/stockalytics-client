@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Chat } from '../../types/chat';
+
 import UserOne from '../../images/user/user-01.png';
-import UserTwo from '../../images/user/user-02.png';
-import UserThree from '../../images/user/user-03.png';
-import UserFour from '../../images/user/user-04.png';
-import UserFive from '../../images/user/user-05.png';
 
 const chatData: Chat[] = [
   {
@@ -16,7 +13,7 @@ const chatData: Chat[] = [
     color: '#10B981',
   },
   {
-    avatar: UserTwo,
+    avatar: UserOne,
     name: 'Henry Fisher',
     text: 'Waiting for you!',
     time: 12,
@@ -24,7 +21,7 @@ const chatData: Chat[] = [
     color: '#DC3545',
   },
   {
-    avatar: UserFour,
+    avatar: UserOne,
     name: 'Jhon Doe',
     text: "What's up?",
     time: 32,
@@ -32,7 +29,7 @@ const chatData: Chat[] = [
     color: '#10B981',
   },
   {
-    avatar: UserFive,
+    avatar: UserOne,
     name: 'Jane Doe',
     text: 'Great',
     time: 32,
@@ -48,7 +45,7 @@ const chatData: Chat[] = [
     color: '#10B981',
   },
   {
-    avatar: UserThree,
+    avatar: UserOne,
     name: 'Jhon Doe',
     text: 'How are you?',
     time: 32,

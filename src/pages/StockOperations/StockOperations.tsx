@@ -73,7 +73,7 @@ const columns = [
   },
 ];
 
-const TableOne = () => {
+const StockOperations = () => {
   const [searchText, setSearchText] = useState('');
   const [filteredData, setFilterData] = useState(brandData);
 
@@ -113,4 +113,4 @@ const TableOne = () => {
   );
 };
 
-export default TableOne;
+export default StockOperations;

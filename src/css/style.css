@@ -248,3 +248,7 @@ span.flatpickr-weekday,
 .ant-pagination-item-link {
   color: white !important;
 }
+
+.custom-ant-table .ant-table-tbody > tr:hover > td {
+  background: transparent !important;
+}
