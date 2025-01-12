@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineInfoCircle,
+} from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 
 import { CustomerInterface } from '../../interface/customer';
@@ -87,7 +91,7 @@ const Customer = () => {
         <div className="flex justify-between items-center">
           <Input
             className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3.5 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            placeholder="Search Your Data..."
+            placeholder="Search Your Customer..."
           />
           <Button
             onClick={() => openModal('customer')}
@@ -144,8 +148,8 @@ const Customer = () => {
                     Error loading data
                   </td>
                 </tr>
-              ) : (
-                customerData.map((customer, index) => (
+              ) : customerData && customerData.length > 0 ? (
+                customerData?.map((customer, index) => (
                   <tr key={index}>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {customer.name}
@@ -162,18 +166,38 @@ const Customer = () => {
                           className="hover:text-primary"
                           onClick={() => handleEdit(customer)}
                         >
-                          <AiOutlineEdit size={20} className="text-blue-500 cursor-pointer" />
+                          <AiOutlineEdit
+                            size={20}
+                            className="text-blue-500 cursor-pointer"
+                          />
                         </button>
                         <button
                           className="hover:text-primary"
                           onClick={() => handleDelete(customer.id)}
                         >
-                          <AiOutlineDelete size={20} className="text-red-500 cursor-pointer" />
+                          <AiOutlineDelete
+                            size={20}
+                            className="text-red-500 cursor-pointer"
+                          />
                         </button>
                       </div>
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-5 text-center">
+                    <div className="flex flex-col items-center">
+                      <AiOutlineInfoCircle
+                        size={40}
+                        className="text-gray-500 mb-4"
+                      />
+                      <p className="text-lg text-gray-500">
+                        No Customer data available.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

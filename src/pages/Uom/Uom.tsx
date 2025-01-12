@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineInfoCircle } from 'react-icons/ai';
 
 import { useModalStore } from '../../store/modalStore';
 import { UomInterface } from '../../interface/uom';
@@ -68,7 +68,7 @@ const Uom = () => {
         <div className="flex justify-between items-center">
           <Input
             className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3.5 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            placeholder="Search Your Data..."
+            placeholder="Search Your Uom..."
           />
           <Button
             onClick={() => openModal('uom')}
@@ -120,7 +120,7 @@ const Uom = () => {
                     Error loading data
                   </td>
                 </tr>
-              ) : (
+              ) : uomData && uomData.length > 0 ? (
                 uomData.map((uom, index) => (
                   <tr key={index}>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -150,6 +150,20 @@ const Uom = () => {
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-5 text-center">
+                    <div className="flex flex-col items-center">
+                      <AiOutlineInfoCircle
+                        size={40}
+                        className="text-gray-500 mb-4"
+                      />
+                      <p className="text-lg text-gray-500">
+                        No UOM data available.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

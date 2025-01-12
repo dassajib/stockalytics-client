@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineInfoCircle,
+} from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 
 import { useModalStore } from '../../store/modalStore';
@@ -40,7 +44,7 @@ const Vendor = () => {
 
   const handleEdit = (record: VendorInterface) => {
     setEditData(record);
-    openModal('uom');
+    openModal('vendor');
   };
 
   const handleDelete = async (id: string) => {
@@ -86,7 +90,7 @@ const Vendor = () => {
         <div className="flex justify-between items-center">
           <Input
             className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3.5 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            placeholder="Search Your Data..."
+            placeholder="Search Your Vendor..."
           />
           <Button
             onClick={() => openModal('vendor')}
@@ -144,19 +148,19 @@ const Vendor = () => {
                     Error loading data
                   </td>
                 </tr>
-              ) : (
-                vendorData.map((vendor, index) => (
+              ) : vendorData && vendorData.length > 0 ? (
+                vendorData?.map((vendor, index) => (
                   <tr key={index}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.name}
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.phone}
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.address}
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
                           className="hover:text-primary"
@@ -164,7 +168,7 @@ const Vendor = () => {
                         >
                           <AiOutlineEdit
                             size={20}
-                            className="text-blue-500 cursor-pointer"
+                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
                           />
                         </button>
                         <button
@@ -173,13 +177,27 @@ const Vendor = () => {
                         >
                           <AiOutlineDelete
                             size={20}
-                            className="text-red-500 cursor-pointer"
+                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
                           />
                         </button>
                       </div>
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-5 text-center">
+                    <div className="flex flex-col items-center">
+                      <AiOutlineInfoCircle
+                        size={40}
+                        className="text-gray-500 mb-4"
+                      />
+                      <p className="text-lg text-gray-500">
+                        No Vendor data available.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
