@@ -1,38 +1,23 @@
+import { useState } from 'react';
 import { Button, Input, Table } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 
 import { useModalStore } from '../../store/modalStore';
-// import { UomInterface } from '../../interface/uom';
-import { useUomData } from '../../hooks/useUomData';
+import { UomInterface } from '../../interface/uom';
+import { usePostUom, useUomData, useUpdateUom } from '../../hooks/useUomData';
+import { deleteUomData } from '../../api/uomAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 
-// const brandData: UomInterface[] = [
-//   {
-//     name: 'Google',
-//     uom: 'kg',
-//   },
-// ];
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text: string) => text,
-  },
-  {
-    title: 'Uom',
-    dataIndex: 'uom',
-    key: 'uom',
-    render: (text: string) => text,
-  },
-];
-
 const Uom = () => {
   const { modalType, openModal, closeModal } = useModalStore();
-  const { data: uomData, isLoading, isError } = useUomData();
+  const { data: uomData, isLoading, isError, refetch } = useUomData();
+  const postUom = usePostUom();
+  const updateUom = useUpdateUom();
+
+  const [editData, setEditData] = useState<UomInterface | null>(null);
 
   const formConfig = [
     {
@@ -44,10 +29,66 @@ const Uom = () => {
     },
   ];
 
-  const handleSubmit = (data: any) => {
-    console.log('Home Form Data:', data);
-    closeModal();
+  const handleSubmit = async (data: any) => {
+    try {
+      if (editData) {
+        const { name } = data;
+        console.log({ name });
+        await updateUom.mutateAsync({ id: editData.id, data: { name } });
+      } else {
+        await postUom.mutateAsync(data);
+      }
+      closeModal();
+      refetch();
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }
   };
+
+  const handleEdit = (record: UomInterface) => {
+    setEditData(record);
+    openModal('uom');
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteUomData(id);
+      refetch();
+    } catch (error) {
+      console.error('Error deleting UOM:', error);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string) => text,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, record: UomInterface) => (
+        <div className="flex items-center justify-center space-x-3.5">
+          <button
+            className="hover:text-primary"
+            onClick={() => handleEdit(record)}
+          >
+            <AiOutlineEdit size={20} className="text-blue-500 cursor-pointer" />
+          </button>
+          <button className="hover:text-primary">
+            <AiOutlineDelete
+              onClick={() => handleDelete(record.id)}
+              size={20}
+              className="text-red-500 cursor-pointer"
+            />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -78,7 +119,11 @@ const Uom = () => {
                   size="large"
                 />
 
-                <DynamicForm inputs={formConfig} onSubmit={handleSubmit} />
+                <DynamicForm
+                  inputs={formConfig}
+                  onSubmit={handleSubmit}
+                  defaultValues={editData || {}}
+                />
               </div>
             </Modal>
           )}
@@ -92,7 +137,7 @@ const Uom = () => {
           <Table
             columns={columns}
             dataSource={uomData}
-            pagination={{ pageSize: 4 }}
+            pagination={{ pageSize: 10 }}
             className="custom-ant-table mt-5"
             rowKey="name"
           />

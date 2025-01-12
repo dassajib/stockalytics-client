@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface InputConfig {
@@ -12,10 +12,25 @@ interface InputConfig {
 interface DynamicFormProps {
   inputs: InputConfig[];
   onSubmit: SubmitHandler<any>;
+  defaultValues?: Record<string, any>;
 }
 
-const DynamicForm: React.FC<DynamicFormProps> = ({ inputs, onSubmit }) => {
-  const { register, handleSubmit } = useForm();
+const DynamicForm: React.FC<DynamicFormProps> = ({
+  inputs,
+  onSubmit,
+  defaultValues,
+}) => {
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues,
+  });
+
+  useEffect(() => {
+    if (defaultValues) {
+      for (const key in defaultValues) {
+        setValue(key, defaultValues[key]);
+      }
+    }
+  }, [defaultValues, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
