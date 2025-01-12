@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LuMessageCircle } from "react-icons/lu";
 
 import ClickOutside from '../ClickOutside';
-import UserOne from '../../images/user/user-01.png';
+import UserOne from '../../assets/images/user/user-01.png';
 
 const DropdownMessage = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

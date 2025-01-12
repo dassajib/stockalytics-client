@@ -9,7 +9,7 @@ import { BiSolidReport } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 
 import SidebarLinkGroup from './SidebarLinkGroup';
-import Logo from '../../images/logo/logo.svg';
+import Logo from '../../assets/images/logo/logo.svg';
 
 interface SidebarProps {
   sidebarOpen: boolean;

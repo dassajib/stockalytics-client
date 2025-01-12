@@ -3,8 +3,8 @@ import { FaGoogle } from 'react-icons/fa';
 import { AiOutlineMail } from 'react-icons/ai';
 import { GoLock } from 'react-icons/go';
 
-import LogoDark from '../../images/logo/logo-dark.svg';
-import Logo from '../../images/logo/logo.svg';
+import LogoDark from '../../assets/images/logo/logo-dark.svg';
+import Logo from '../../assets/images/logo/logo.svg';
 import Grettings from '../../components/Grettings/Grettings';
 
 const SignIn = () => {

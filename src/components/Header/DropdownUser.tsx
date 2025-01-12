@@ -7,7 +7,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { PiSignOut } from "react-icons/pi";
 
 import ClickOutside from '../ClickOutside';
-import UserOne from '../../images/user/user-01.png';
+import UserOne from '../../assets/images/user/user-01.png';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
