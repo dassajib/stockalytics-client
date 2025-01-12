@@ -4,7 +4,7 @@ import { VendorInterface } from '../interface/vendor';
 import { fetchVendorData, postVendorData, updateVendorData } from '../api/vendorAPI';
 
 export const useVendorData = () => {
-    return useQuery<VendorInterface[], Error>('uomData', fetchVendorData);
+    return useQuery<VendorInterface[], Error>('vendorData', fetchVendorData);
 };
 
 export const usePostVendor = () => {

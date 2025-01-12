@@ -16,6 +16,7 @@ const StockTransactions = lazy(() => import('../pages/StockTransactions/StockTra
 const SalesByStock = lazy(() => import('../pages/SalesByStock/SalesByStock'));
 const SalesReportListing = lazy(() => import('../pages/SalesReportListing/SalesReportListing'));
 const Vendor = lazy(() => import('../pages/Vendor/Vendor'));
+const Customer = lazy(() => import('../pages/Customer/Customer'));
 import Loader from '../components/Loader';
 
 const Index = () => {
@@ -45,6 +46,7 @@ const Index = () => {
           <Route path="pos/sales-by-stock" element={<SalesByStock />} />
           <Route path="pos/sales-report-listing" element={<SalesReportListing />} />
           <Route path="vendor" element={<Vendor />} />
+          <Route path="customer" element={<Customer />} />
         </Route>
       </Routes>
     </Suspense>
