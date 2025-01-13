@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
       onClick={closeModal}
     >
       <div
-        className="min-w-125 rounded-lg shadow-2xl"
+        className="min-w-sm md:min-w-125 min-h-fit rounded-lg shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

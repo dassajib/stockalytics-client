@@ -33,7 +33,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   }, [defaultValues, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-8">
       {inputs.map((input) => (
         <div key={input.name}>
           <label className="block text-sm font-medium text-gray-700">
@@ -43,7 +43,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {...register(input.name, { required: input.required })}
             type={input.type}
             placeholder={input.placeholder}
-            className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full shadow-sm sm:text-sm border-[1.5px] border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
           />
         </div>
       ))}

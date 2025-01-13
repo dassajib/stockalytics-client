@@ -18,6 +18,7 @@ import { deleteVendorData } from '../../api/vendorAPI';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Modal from '../../components/Modal/Modal';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
+import toast from 'react-hot-toast';
 
 const Vendor = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -31,9 +32,10 @@ const Vendor = () => {
     try {
       if (editData) {
         const { name } = data;
-        await updateVendor.mutateAsync({ id: editData.id, data: { name } });
+        await updateVendor.mutateAsync({ id: editData.id, data: {name} });
       } else {
         await postVendor.mutateAsync(data);
+        toast.success(`New Vedor ${data.name} is added`);
       }
       closeModal();
       refetch();
@@ -89,9 +91,10 @@ const Vendor = () => {
         </h4>
         <div className="flex justify-between items-center">
           <Input
-            className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3.5 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            className="w-1/2 rounded-lg border-[2.5px] border-gray-300 bg-transparent py-3.5 px-5 text-black placeholder-slate-500 dark:placeholder-slate-400 outline-none transition focus:outline-none active:outline-none disabled:cursor-default disabled:bg-whiter dark:border-gray-600 dark:bg-form-input dark:text-white"
             placeholder="Search Your Vendor..."
           />
+
           <Button
             onClick={() => openModal('vendor')}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"

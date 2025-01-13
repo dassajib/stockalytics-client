@@ -18,6 +18,7 @@ import { deleteCustomerData } from '../../api/customerAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import toast from 'react-hot-toast';
 
 const Customer = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -32,9 +33,10 @@ const Customer = () => {
       if (editData) {
         const { name } = data;
         console.log({ name });
-        await updateCustomer.mutateAsync({ id: editData.id, data: { name } });
+        await updateCustomer.mutateAsync({ id: editData.id, data: name });
       } else {
         await postCustomer.mutateAsync(data);
+        toast.success(`New Customer ${data.name} is added`);
       }
       closeModal();
       refetch();
@@ -90,9 +92,10 @@ const Customer = () => {
         </h4>
         <div className="flex justify-between items-center">
           <Input
-            className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3.5 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            className="w-1/2 rounded-lg border-[2.5px] border-gray-300 bg-transparent py-3.5 px-5 text-black placeholder-slate-500 dark:placeholder-slate-400 outline-none transition focus:outline-none active:outline-none disabled:cursor-default disabled:bg-whiter dark:border-gray-600 dark:bg-form-input dark:text-white"
             placeholder="Search Your Customer..."
           />
+
           <Button
             onClick={() => openModal('customer')}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
@@ -168,7 +171,7 @@ const Customer = () => {
                         >
                           <AiOutlineEdit
                             size={20}
-                            className="text-blue-500 cursor-pointer"
+                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
                           />
                         </button>
                         <button
@@ -177,7 +180,7 @@ const Customer = () => {
                         >
                           <AiOutlineDelete
                             size={20}
-                            className="text-red-500 cursor-pointer"
+                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
                           />
                         </button>
                       </div>
