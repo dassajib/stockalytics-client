@@ -6,6 +6,7 @@ import {
   AiOutlineInfoCircle,
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
+import Swal from 'sweetalert2';
 
 import { CustomerInterface } from '../../interface/customer';
 import { useModalStore } from '../../store/modalStore';
@@ -51,11 +52,24 @@ const Customer = () => {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await deleteCustomerData(id);
-      refetch();
-    } catch (error) {
-      console.error('Error deleting customer:', error);
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteCustomerData(id);
+        Swal.fire('Deleted!', 'The customer has been deleted.', 'success');
+        refetch();
+      } catch (error) {
+        console.error('Error deleting customer:', error);
+      }
     }
   };
 
@@ -104,7 +118,7 @@ const Customer = () => {
           </Button>
           {modalType === 'customer' && (
             <Modal>
-              <div className="relative p-6 bg-white rounded-lg shadow-xl">
+              <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
                   onClick={closeModal}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"

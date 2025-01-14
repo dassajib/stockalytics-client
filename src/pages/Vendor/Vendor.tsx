@@ -6,6 +6,8 @@ import {
   AiOutlineInfoCircle,
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
+import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 import { useModalStore } from '../../store/modalStore';
 import { VendorInterface } from '../../interface/vendor';
@@ -18,7 +20,6 @@ import { deleteVendorData } from '../../api/vendorAPI';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Modal from '../../components/Modal/Modal';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
-import toast from 'react-hot-toast';
 
 const Vendor = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -32,7 +33,7 @@ const Vendor = () => {
     try {
       if (editData) {
         const { name } = data;
-        await updateVendor.mutateAsync({ id: editData.id, data: {name} });
+        await updateVendor.mutateAsync({ id: editData.id, data: name });
       } else {
         await postVendor.mutateAsync(data);
         toast.success(`New Vedor ${data.name} is added`);
@@ -50,11 +51,26 @@ const Vendor = () => {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await deleteVendorData(id);
-      refetch();
-    } catch (error) {
-      console.error('Error deleting vendor:', error);
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteVendorData(id);
+        Swal.fire('Deleted!', 'The vendor has been deleted.', 'success');
+        refetch();
+      } catch (error) {
+        console.error('Error deleting vendor:', error);
+        Swal.fire('Error!', 'There was an error deleting the vendor.', 'error');
+      }
     }
   };
 
@@ -103,7 +119,7 @@ const Vendor = () => {
           </Button>
           {modalType === 'vendor' && (
             <Modal>
-              <div className="relative p-6 bg-white rounded-lg shadow-xl">
+              <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
                   onClick={closeModal}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -154,16 +170,16 @@ const Vendor = () => {
               ) : vendorData && vendorData.length > 0 ? (
                 vendorData?.map((vendor, index) => (
                   <tr key={index}>
-                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.name}
                     </td>
-                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.phone}
                     </td>
-                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       {vendor.address}
                     </td>
-                    <td className="text-black dark:text-white border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
                           className="hover:text-primary"
