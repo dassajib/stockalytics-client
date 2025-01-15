@@ -13,7 +13,7 @@ export const postUomData = async (data: UomInterface) => {
 
 export const updateUomData = async (id: string, data: { name: string }) => {
     console.log(data)
-    const response = await axiosInstance.patch(`/uom/${id}`, data);
+    const response = await axiosInstance.patch(`/uom/${id}/`, data);
     return response.data;
 };
 

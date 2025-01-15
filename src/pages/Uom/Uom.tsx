@@ -38,22 +38,32 @@ const Uom = () => {
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
-        const { name } = data;
-        await updateUom.mutateAsync({ id: editData.id, data: name });
+        // const { name } = data;
+        await updateUom.mutateAsync({ id: editData.id, data });
       } else {
         await postUom.mutateAsync(data);
         toast.success(`New Uom ${data.name} is added`);
       }
-      closeModal();
+      closeModalAndReset();
       refetch();
     } catch (error) {
       console.error('Error submitting data:', error);
     }
   };
 
+  const openCreateModal = () => {
+    setEditData(null);
+    openModal('uom');
+  };
+
   const handleEdit = (record: UomInterface) => {
     setEditData(record);
     openModal('uom');
+  };
+
+  const closeModalAndReset = () => {
+    setEditData(null);
+    closeModal();
   };
 
   const handleDelete = async (id: string) => {
@@ -67,7 +77,7 @@ const Uom = () => {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
     });
-    if (result.isConfirmed){
+    if (result.isConfirmed) {
       try {
         await deleteUomData(id);
         Swal.fire('Deleted!', 'The uom has been deleted.', 'success');
@@ -92,7 +102,7 @@ const Uom = () => {
           />
 
           <Button
-            onClick={() => openModal('uom')}
+            onClick={openCreateModal}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create UOM
@@ -101,7 +111,7 @@ const Uom = () => {
             <Modal>
               <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
-                  onClick={closeModal}
+                  onClick={closeModalAndReset}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                   icon={<CloseOutlined />}
                   size="large"
