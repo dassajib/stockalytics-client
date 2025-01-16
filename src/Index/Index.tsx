@@ -10,11 +10,19 @@ const Report = lazy(() => import('../pages/Report/Report'));
 const Uom = lazy(() => import('../pages/Uom/Uom'));
 const Category = lazy(() => import('../pages/Category/Category'));
 const Item = lazy(() => import('../pages/Item/Item'));
-const StockOperations = lazy(() => import('../pages/StockOperations/StockOperations'));
-const StockReconcile = lazy(() => import('../pages/StockReconcile/StockReconcile'));
-const StockTransactions = lazy(() => import('../pages/StockTransactions/StockTransactions'));
+const StockOperations = lazy(
+  () => import('../pages/StockOperations/StockOperations'),
+);
+const StockReconcile = lazy(
+  () => import('../pages/StockReconcile/StockReconcile'),
+);
+const StockTransactions = lazy(
+  () => import('../pages/StockTransactions/StockTransactions'),
+);
 const SalesByStock = lazy(() => import('../pages/SalesByStock/SalesByStock'));
-const SalesReportListing = lazy(() => import('../pages/SalesReportListing/SalesReportListing'));
+const SalesReportListing = lazy(
+  () => import('../pages/SalesReportListing/SalesReportListing'),
+);
 const Vendor = lazy(() => import('../pages/Vendor/Vendor'));
 const Customer = lazy(() => import('../pages/Customer/Customer'));
 import Loader from '../components/Loader';
@@ -44,7 +52,10 @@ const Index = () => {
           <Route path="stock/reconcile" element={<StockReconcile />} />
           <Route path="stock/transactions" element={<StockTransactions />} />
           <Route path="pos/sales-by-stock" element={<SalesByStock />} />
-          <Route path="pos/sales-report-listing" element={<SalesReportListing />} />
+          <Route
+            path="pos/sales-report-listing"
+            element={<SalesReportListing />}
+          />
           <Route path="vendor" element={<Vendor />} />
           <Route path="customer" element={<Customer />} />
         </Route>
