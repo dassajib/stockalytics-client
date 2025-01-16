@@ -33,9 +33,7 @@ const Category = () => {
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
-        const { name, description } = data;
-        console.log({ name });
-        await updateCategory.mutateAsync({ id: editData.id, data: name });
+        await updateCategory.mutateAsync({ id: editData.id, data });
       } else {
         await postCategory.mutateAsync(data);
         toast.success(`New category ${data.name} is added`);
@@ -163,7 +161,7 @@ const Category = () => {
                       {category.name}
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {category?.description}
+                      {category.description || 'n/a'}
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
