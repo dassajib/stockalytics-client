@@ -12,7 +12,7 @@ export const postCustomerData = async (data: CustomerInterface) => {
 };
 
 export const updateCustomerData = async (id: string, data: { name: string }) => {
-    const response = await axiosInstance.patch(`/customer/${id}`, data);
+    const response = await axiosInstance.put(`/customer/${id}`, data);
     return response.data;
 };
 

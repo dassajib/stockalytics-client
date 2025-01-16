@@ -7,6 +7,7 @@ import {
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 import { CustomerInterface } from '../../interface/customer';
 import { useModalStore } from '../../store/modalStore';
@@ -19,7 +20,6 @@ import { deleteCustomerData } from '../../api/customerAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import toast from 'react-hot-toast';
 
 const Customer = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -28,50 +28,6 @@ const Customer = () => {
   const updateCustomer = useUpdateCustomer();
 
   const [editData, setEditData] = useState<CustomerInterface | null>(null);
-
-  const handleSubmit = async (data: any) => {
-    try {
-      if (editData) {
-        const { name } = data;
-        console.log({ name });
-        await updateCustomer.mutateAsync({ id: editData.id, data: name });
-      } else {
-        await postCustomer.mutateAsync(data);
-        toast.success(`New Customer ${data.name} is added`);
-      }
-      closeModal();
-      refetch();
-    } catch (error) {
-      console.error('Error submitting data:', error);
-    }
-  };
-
-  const handleEdit = (record: CustomerInterface) => {
-    setEditData(record);
-    openModal('customer');
-  };
-
-  const handleDelete = async (id: string) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    });
-    if (result.isConfirmed) {
-      try {
-        await deleteCustomerData(id);
-        Swal.fire('Deleted!', 'The customer has been deleted.', 'success');
-        refetch();
-      } catch (error) {
-        console.error('Error deleting customer:', error);
-      }
-    }
-  };
 
   const formConfig = [
     {
@@ -97,6 +53,129 @@ const Customer = () => {
     },
   ];
 
+  const handleSubmit = async (data: any) => {
+    try {
+      if (editData) {
+        await updateCustomer.mutateAsync({ id: editData.id, data });
+      } else {
+        await postCustomer.mutateAsync(data);
+        toast.success(`New Customer ${data.name} is added`);
+      }
+      closeModalAndReset();
+      refetch();
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }
+  };
+
+  const openCreateModal = () => {
+    setEditData(null);
+    openModal('customer');
+  };
+
+  const handleEdit = (record: CustomerInterface) => {
+    setEditData(record);
+    openModal('customer');
+  };
+
+  const closeModalAndReset = () => {
+    setEditData(null);
+    closeModal();
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteCustomerData(id);
+        Swal.fire('Deleted!', 'The customer has been deleted.', 'success');
+        refetch();
+      } catch (error) {
+        console.error('Error deleting customer:', error);
+      }
+    }
+  };
+
+  const renderTableRows = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={4} className="py-5 text-center">
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (isError) {
+      return (
+        <tr>
+          <td colSpan={4} className="py-5 text-center">
+            Error loading data
+          </td>
+        </tr>
+      );
+    }
+
+    if (customerData && customerData.length > 0) {
+      return customerData.map((customer, index) => (
+        <tr key={index}>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {customer.name}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {customer.phone}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {customer.address}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
+              <button
+                className="hover:text-primary"
+                onClick={() => handleEdit(customer)}
+              >
+                <AiOutlineEdit
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(customer.id)}
+              >
+                <AiOutlineDelete
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ));
+    }
+
+    return (
+      <tr>
+        <td colSpan={4} className="py-5 text-center">
+          <div className="flex flex-col items-center">
+            <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
+            <p className="text-lg text-gray-500">No Customer data available.</p>
+          </div>
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <>
       <Breadcrumb pageName="Customer" />
@@ -109,9 +188,8 @@ const Customer = () => {
             className="w-1/2 rounded-lg border-[2.5px] border-gray-300 bg-transparent py-3.5 px-5 text-black placeholder-slate-500 dark:placeholder-slate-400 outline-none transition focus:outline-none active:outline-none disabled:cursor-default disabled:bg-whiter dark:border-gray-600 dark:bg-form-input dark:text-white"
             placeholder="Search Your Customer..."
           />
-
           <Button
-            onClick={() => openModal('customer')}
+            onClick={openCreateModal}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Customer
@@ -120,7 +198,7 @@ const Customer = () => {
             <Modal>
               <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
-                  onClick={closeModal}
+                  onClick={closeModalAndReset}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                   icon={<CloseOutlined />}
                   size="large"
@@ -152,71 +230,7 @@ const Customer = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : isError ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Error loading data
-                  </td>
-                </tr>
-              ) : customerData && customerData.length > 0 ? (
-                customerData?.map((customer, index) => (
-                  <tr key={index}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {customer.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {customer.phone}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {customer.address}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleEdit(customer)}
-                        >
-                          <AiOutlineEdit
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleDelete(customer.id)}
-                        >
-                          <AiOutlineDelete
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    <div className="flex flex-col items-center">
-                      <AiOutlineInfoCircle
-                        size={40}
-                        className="text-gray-500 mb-4"
-                      />
-                      <p className="text-lg text-gray-500">
-                        No Customer data available.
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
+            <tbody>{renderTableRows()}</tbody>
           </table>
         </div>
       </div>

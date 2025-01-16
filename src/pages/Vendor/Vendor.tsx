@@ -29,25 +29,58 @@ const Vendor = () => {
 
   const [editData, setEditData] = useState<VendorInterface | null>(null);
 
+  const formConfig = [
+    {
+      name: 'name',
+      type: 'text',
+      label: 'Name',
+      placeholder: 'Enter your Vendor name',
+      required: true,
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      label: 'Phone',
+      placeholder: 'Enter your Vendor phone',
+      required: true,
+    },
+    {
+      name: 'address',
+      type: 'text',
+      label: 'Address',
+      placeholder: 'Enter your Vendor address',
+      required: true,
+    },
+  ];
+
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
-        const { name } = data;
-        await updateVendor.mutateAsync({ id: editData.id, data: name });
+        await updateVendor.mutateAsync({ id: editData.id, data });
       } else {
         await postVendor.mutateAsync(data);
-        toast.success(`New Vedor ${data.name} is added`);
+        toast.success(`New Vendor ${data.name} is added`);
       }
-      closeModal();
+      closeModalAndReset();
       refetch();
     } catch (error) {
       console.error('Error submitting data:', error);
     }
   };
 
+  const openCreateModal = () => {
+    setEditData(null);
+    openModal('vendor');
+  };
+
   const handleEdit = (record: VendorInterface) => {
     setEditData(record);
     openModal('vendor');
+  };
+
+  const closeModalAndReset = () => {
+    setEditData(null);
+    closeModal();
   };
 
   const handleDelete = async (id: string) => {
@@ -74,29 +107,76 @@ const Vendor = () => {
     }
   };
 
-  const formConfig = [
-    {
-      name: 'name',
-      type: 'text',
-      label: 'Name',
-      placeholder: 'Enter your Vendor name',
-      required: true,
-    },
-    {
-      name: 'phone',
-      type: 'text',
-      label: 'Phone',
-      placeholder: 'Enter your Vendor phone',
-      required: true,
-    },
-    {
-      name: 'address',
-      type: 'text',
-      label: 'Address',
-      placeholder: 'Enter your Vendor address',
-      required: true,
-    },
-  ];
+  const renderTableRows = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={4} className="py-5 text-center">
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (isError) {
+      return (
+        <tr>
+          <td colSpan={4} className="py-5 text-center">
+            Error loading data
+          </td>
+        </tr>
+      );
+    }
+
+    if (vendorData && vendorData.length > 0) {
+      return vendorData.map((vendor, index) => (
+        <tr key={index}>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {vendor.name}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {vendor.phone}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {vendor.address}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
+              <button
+                className="hover:text-primary"
+                onClick={() => handleEdit(vendor)}
+              >
+                <AiOutlineEdit
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(vendor.id)}
+              >
+                <AiOutlineDelete
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ));
+    }
+
+    return (
+      <tr>
+        <td colSpan={4} className="py-5 text-center">
+          <div className="flex flex-col items-center">
+            <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
+            <p className="text-lg text-gray-500">No Vendor data available.</p>
+          </div>
+        </td>
+      </tr>
+    );
+  };
 
   return (
     <>
@@ -112,7 +192,7 @@ const Vendor = () => {
           />
 
           <Button
-            onClick={() => openModal('vendor')}
+            onClick={openCreateModal}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Vendor
@@ -121,7 +201,7 @@ const Vendor = () => {
             <Modal>
               <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
-                  onClick={closeModal}
+                  onClick={closeModalAndReset}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                   icon={<CloseOutlined />}
                   size="large"
@@ -154,71 +234,7 @@ const Vendor = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : isError ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Error loading data
-                  </td>
-                </tr>
-              ) : vendorData && vendorData.length > 0 ? (
-                vendorData?.map((vendor, index) => (
-                  <tr key={index}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {vendor.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {vendor.phone}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {vendor.address}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleEdit(vendor)}
-                        >
-                          <AiOutlineEdit
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleDelete(vendor.id)}
-                        >
-                          <AiOutlineDelete
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    <div className="flex flex-col items-center">
-                      <AiOutlineInfoCircle
-                        size={40}
-                        className="text-gray-500 mb-4"
-                      />
-                      <p className="text-lg text-gray-500">
-                        No Vendor data available.
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
+            <tbody>{renderTableRows()}</tbody>
           </table>
         </div>
       </div>

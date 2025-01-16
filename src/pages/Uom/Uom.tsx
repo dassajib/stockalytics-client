@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import {
-  AiOutlineDelete,
-  AiOutlineEdit,
-  AiOutlineInfoCircle,
-} from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineInfoCircle } from 'react-icons/ai';
 import Swal from 'sweetalert2';
-
 import { useModalStore } from '../../store/modalStore';
 import { UomInterface } from '../../interface/uom';
 import { usePostUom, useUomData, useUpdateUom } from '../../hooks/useUomData';
@@ -38,16 +33,17 @@ const Uom = () => {
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
-        // const { name } = data;
         await updateUom.mutateAsync({ id: editData.id, data });
+        toast.success(`UOM ${data.name} updated successfully.`);
       } else {
         await postUom.mutateAsync(data);
-        toast.success(`New Uom ${data.name} is added`);
+        toast.success(`New UOM ${data.name} added successfully.`);
       }
       closeModalAndReset();
       refetch();
     } catch (error) {
       console.error('Error submitting data:', error);
+      toast.error('Error submitting data.');
     }
   };
 
@@ -77,15 +73,76 @@ const Uom = () => {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
     });
+
     if (result.isConfirmed) {
       try {
         await deleteUomData(id);
-        Swal.fire('Deleted!', 'The uom has been deleted.', 'success');
+        Swal.fire('Deleted!', 'The UOM has been deleted.', 'success');
         refetch();
       } catch (error) {
         console.error('Error deleting UOM:', error);
+        Swal.fire('Error!', 'Failed to delete the UOM.', 'error');
       }
     }
+  };
+
+  const renderTableContent = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (isError) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            Error loading data
+          </td>
+        </tr>
+      );
+    }
+
+    if (!uomData || uomData.length === 0) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            <div className="flex flex-col items-center">
+              <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
+              <p className="text-lg text-gray-500">No UOM data available.</p>
+            </div>
+          </td>
+        </tr>
+      );
+    }
+
+    return uomData.map((uom) => (
+      <tr key={uom.id}>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          {uom.name}
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <div className="flex items-center space-x-3.5">
+            <button
+              className="hover:text-primary"
+              onClick={() => handleEdit(uom)}
+            >
+              <AiOutlineEdit size={20} className="text-gray-700 dark:text-gray-2 cursor-pointer" />
+            </button>
+            <button
+              className="hover:text-primary"
+              onClick={() => handleDelete(uom.id)}
+            >
+              <AiOutlineDelete size={20} className="text-gray-700 dark:text-gray-2 cursor-pointer" />
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
   };
 
   return (
@@ -98,9 +155,8 @@ const Uom = () => {
         <div className="flex justify-between items-center">
           <Input
             className="w-1/2 rounded-lg border-[2.5px] border-gray-300 bg-transparent py-3.5 px-5 text-black placeholder-slate-500 dark:placeholder-slate-400 outline-none transition focus:outline-none active:outline-none disabled:cursor-default disabled:bg-whiter dark:border-gray-600 dark:bg-form-input dark:text-white"
-            placeholder="Search Your Uom..."
+            placeholder="Search Your UOM..."
           />
-
           <Button
             onClick={openCreateModal}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
@@ -125,77 +181,16 @@ const Uom = () => {
             </Modal>
           )}
         </div>
-
         <div className="max-w-full overflow-x-auto mt-10">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Name
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Actions
-                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">Name</th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : isError ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Error loading data
-                  </td>
-                </tr>
-              ) : uomData && uomData.length > 0 ? (
-                uomData.map((uom, index) => (
-                  <tr key={index}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {uom.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleEdit(uom)}
-                        >
-                          <AiOutlineEdit
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleDelete(uom.id)}
-                        >
-                          <AiOutlineDelete
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    <div className="flex flex-col items-center">
-                      <AiOutlineInfoCircle
-                        size={40}
-                        className="text-gray-500 mb-4"
-                      />
-                      <p className="text-lg text-gray-500">
-                        No UOM data available.
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
+              {renderTableContent()}
             </tbody>
           </table>
         </div>
