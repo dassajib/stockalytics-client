@@ -5,11 +5,11 @@ import {
   fetchCategoryData,
   postCategoryData,
   updateCategoryData,
-} from '../api/category';
+} from '../api/categoryApi';
 
 export const useCategoryData = () => {
   return useQuery<CategoryInterface[], Error>(
-    'customerData',
+    'categoryData',
     fetchCategoryData,
   );
 };

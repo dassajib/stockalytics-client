@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineInfoCircle } from 'react-icons/ai';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineInfoCircle,
+} from 'react-icons/ai';
 import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
+
 import { useModalStore } from '../../store/modalStore';
 import { UomInterface } from '../../interface/uom';
 import { usePostUom, useUomData, useUpdateUom } from '../../hooks/useUomData';
@@ -10,7 +16,6 @@ import { deleteUomData } from '../../api/uomAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import toast from 'react-hot-toast';
 
 const Uom = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -131,13 +136,19 @@ const Uom = () => {
               className="hover:text-primary"
               onClick={() => handleEdit(uom)}
             >
-              <AiOutlineEdit size={20} className="text-gray-700 dark:text-gray-2 cursor-pointer" />
+              <AiOutlineEdit
+                size={20}
+                className="text-gray-700 dark:text-gray-2 cursor-pointer"
+              />
             </button>
             <button
               className="hover:text-primary"
               onClick={() => handleDelete(uom.id)}
             >
-              <AiOutlineDelete size={20} className="text-gray-700 dark:text-gray-2 cursor-pointer" />
+              <AiOutlineDelete
+                size={20}
+                className="text-gray-700 dark:text-gray-2 cursor-pointer"
+              />
             </button>
           </div>
         </td>
@@ -185,13 +196,15 @@ const Uom = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white">Name</th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">Actions</th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Name
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody>
-              {renderTableContent()}
-            </tbody>
+            <tbody>{renderTableContent()}</tbody>
           </table>
         </div>
       </div>

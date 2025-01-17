@@ -7,6 +7,7 @@ import {
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 import { useModalStore } from '../../store/modalStore';
 import {
@@ -14,13 +15,11 @@ import {
   usePostCategory,
   useUpdateCategory,
 } from '../../hooks/useCategoryData';
-
+import { CategoryInterface } from '../../interface/category';
+import { deleteCategoryData } from '../../api/categoryApi';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import toast from 'react-hot-toast';
-import { CategoryInterface } from '../../interface/category';
-import { deleteCategoryData } from '../../api/category';
 
 const Category = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -30,24 +29,53 @@ const Category = () => {
 
   const [editData, setEditData] = useState<CategoryInterface | null>(null);
 
+  const formConfig = [
+    {
+      name: 'name',
+      type: 'text',
+      label: 'Name',
+      placeholder: 'Enter Category name',
+      required: true,
+    },
+    {
+      name: 'description',
+      type: 'text',
+      label: 'Description',
+      placeholder: 'Enter description',
+      required: false,
+    },
+  ];
+
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
         await updateCategory.mutateAsync({ id: editData.id, data });
+        toast.success(`Category ${data.name} updated successfully.`);
       } else {
         await postCategory.mutateAsync(data);
         toast.success(`New category ${data.name} is added`);
       }
-      closeModal();
+      closeModalAndReset();
       refetch();
     } catch (error) {
       console.error('Error submitting data:', error);
+      toast.error('Error submitting data.');
     }
+  };
+
+  const openCreateModal = () => {
+    setEditData(null);
+    openModal('category');
   };
 
   const handleEdit = (record: CategoryInterface) => {
     setEditData(record);
     openModal('category');
+  };
+
+  const closeModalAndReset = () => {
+    setEditData(null);
+    closeModal();
   };
 
   const handleDelete = async (id: string) => {
@@ -68,26 +96,80 @@ const Category = () => {
         refetch();
       } catch (error) {
         console.error('Error deleting category:', error);
+        Swal.fire('Error!', 'Failed to delete the Category.', 'error');
       }
     }
   };
 
-  const formConfig = [
-    {
-      name: 'name',
-      type: 'text',
-      label: 'Name',
-      placeholder: 'Enter Category name',
-      required: true,
-    },
-    {
-      name: 'description',
-      type: 'text',
-      label: 'Description',
-      placeholder: 'Enter description',
-      required: false,
-    },
-  ];
+  const renderTableContent = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (isError) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            Error loading data
+          </td>
+        </tr>
+      );
+    }
+
+    if (!categoryData || categoryData.length === 0) {
+      return (
+        <tr>
+          <td colSpan={2} className="py-5 text-center">
+            <div className="flex flex-col items-center">
+              <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
+              <p className="text-lg text-gray-500">
+                No Category data available.
+              </p>
+            </div>
+          </td>
+        </tr>
+      );
+    }
+
+    return categoryData.map((category) => (
+      <tr key={category.id}>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          {category.name}
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          {category.description}
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <div className="flex items-center space-x-3.5">
+            <button
+              className="hover:text-primary"
+              onClick={() => handleEdit(category)}
+            >
+              <AiOutlineEdit
+                size={20}
+                className="text-gray-700 dark:text-gray-2 cursor-pointer"
+              />
+            </button>
+            <button
+              className="hover:text-primary"
+              onClick={() => handleDelete(category.id)}
+            >
+              <AiOutlineDelete
+                size={20}
+                className="text-gray-700 dark:text-gray-2 cursor-pointer"
+              />
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
@@ -103,7 +185,7 @@ const Category = () => {
           />
 
           <Button
-            onClick={() => openModal('category')}
+            onClick={openCreateModal}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Category
@@ -112,7 +194,7 @@ const Category = () => {
             <Modal>
               <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
                 <Button
-                  onClick={closeModal}
+                  onClick={closeModalAndReset}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                   icon={<CloseOutlined />}
                   size="large"
@@ -141,68 +223,7 @@ const Category = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : isError ? (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    Error loading data
-                  </td>
-                </tr>
-              ) : categoryData && categoryData.length > 0 ? (
-                categoryData?.map((category, index) => (
-                  <tr key={index}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {category.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {category.description || 'n/a'}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleEdit(category)}
-                        >
-                          <AiOutlineEdit
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() => handleDelete(category.id)}
-                        >
-                          <AiOutlineDelete
-                            size={20}
-                            className="text-gray-700 dark:text-gray-2 cursor-pointer"
-                          />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-5 text-center">
-                    <div className="flex flex-col items-center">
-                      <AiOutlineInfoCircle
-                        size={40}
-                        className="text-gray-500 mb-4"
-                      />
-                      <p className="text-lg text-gray-500">
-                        No Category data available.
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
+            <tbody>{renderTableContent()}</tbody>
           </table>
         </div>
       </div>
