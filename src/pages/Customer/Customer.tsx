@@ -3,7 +3,6 @@ import { Button, Input } from 'antd';
 import {
   AiOutlineDelete,
   AiOutlineEdit,
-  AiOutlineInfoCircle,
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
@@ -20,6 +19,9 @@ import { deleteCustomerData } from '../../api/customerAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import TableLoading from '../../components/Table/TableLoading';
+import TableErrorLoading from '../../components/Table/TableErrorLoading';
+import TableNoData from '../../components/Table/TableNoData';
 
 const Customer = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -106,25 +108,9 @@ const Customer = () => {
   };
 
   const renderTableRows = () => {
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={4} className="py-5 text-center">
-            Loading...
-          </td>
-        </tr>
-      );
-    }
+    if (isLoading) <TableLoading />;
 
-    if (isError) {
-      return (
-        <tr>
-          <td colSpan={4} className="py-5 text-center">
-            Error loading data
-          </td>
-        </tr>
-      );
-    }
+    if (isError) <TableErrorLoading />;
 
     if (customerData && customerData.length > 0) {
       return customerData.map((customer, index) => (
@@ -164,16 +150,7 @@ const Customer = () => {
       ));
     }
 
-    return (
-      <tr>
-        <td colSpan={4} className="py-5 text-center">
-          <div className="flex flex-col items-center">
-            <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
-            <p className="text-lg text-gray-500">No Customer data available.</p>
-          </div>
-        </td>
-      </tr>
-    );
+    return <TableNoData />;
   };
 
   return (

@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import {
-  AiOutlineDelete,
-  AiOutlineEdit,
-  AiOutlineInfoCircle,
-} from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 
@@ -16,6 +12,9 @@ import { deleteUomData } from '../../api/uomAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import TableLoading from '../../components/Table/TableLoading';
+import TableErrorLoading from '../../components/Table/TableErrorLoading';
+import TableNoData from '../../components/Table/TableNoData';
 
 const Uom = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -92,68 +91,43 @@ const Uom = () => {
   };
 
   const renderTableContent = () => {
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            Loading...
-          </td>
-        </tr>
-      );
-    }
+    if (isLoading) <TableLoading />;
 
-    if (isError) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            Error loading data
-          </td>
-        </tr>
-      );
-    }
+    if (isError) <TableErrorLoading />;
 
-    if (!uomData || uomData.length === 0) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            <div className="flex flex-col items-center">
-              <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
-              <p className="text-lg text-gray-500">No UOM data available.</p>
+    if (uomData && uomData.length > 0) {
+      return uomData.map((uom) => (
+        <tr key={uom.id}>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {uom.name}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
+              <button
+                className="hover:text-primary"
+                onClick={() => handleEdit(uom)}
+              >
+                <AiOutlineEdit
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(uom.id)}
+              >
+                <AiOutlineDelete
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
             </div>
           </td>
         </tr>
-      );
+      ));
     }
 
-    return uomData.map((uom) => (
-      <tr key={uom.id}>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          {uom.name}
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <div className="flex items-center space-x-3.5">
-            <button
-              className="hover:text-primary"
-              onClick={() => handleEdit(uom)}
-            >
-              <AiOutlineEdit
-                size={20}
-                className="text-gray-700 dark:text-gray-2 cursor-pointer"
-              />
-            </button>
-            <button
-              className="hover:text-primary"
-              onClick={() => handleDelete(uom.id)}
-            >
-              <AiOutlineDelete
-                size={20}
-                className="text-gray-700 dark:text-gray-2 cursor-pointer"
-              />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ));
+    return <TableNoData />;
   };
 
   return (

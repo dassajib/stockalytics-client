@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
-import {
-  AiOutlineDelete,
-  AiOutlineEdit,
-  AiOutlineInfoCircle,
-} from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
@@ -20,6 +16,9 @@ import { deleteVendorData } from '../../api/vendorAPI';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Modal from '../../components/Modal/Modal';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
+import TableLoading from '../../components/Table/TableLoading';
+import TableErrorLoading from '../../components/Table/TableErrorLoading';
+import TableNoData from '../../components/Table/TableNoData';
 
 const Vendor = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -108,25 +107,9 @@ const Vendor = () => {
   };
 
   const renderTableRows = () => {
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={4} className="py-5 text-center">
-            Loading...
-          </td>
-        </tr>
-      );
-    }
+    if (isLoading) <TableLoading />;
 
-    if (isError) {
-      return (
-        <tr>
-          <td colSpan={4} className="py-5 text-center">
-            Error loading data
-          </td>
-        </tr>
-      );
-    }
+    if (isError) <TableErrorLoading />;
 
     if (vendorData && vendorData.length > 0) {
       return vendorData.map((vendor, index) => (
@@ -166,16 +149,7 @@ const Vendor = () => {
       ));
     }
 
-    return (
-      <tr>
-        <td colSpan={4} className="py-5 text-center">
-          <div className="flex flex-col items-center">
-            <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
-            <p className="text-lg text-gray-500">No Vendor data available.</p>
-          </div>
-        </td>
-      </tr>
-    );
+    return <TableNoData />;
   };
 
   return (

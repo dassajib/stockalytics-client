@@ -3,7 +3,6 @@ import { Button, Input } from 'antd';
 import {
   AiOutlineDelete,
   AiOutlineEdit,
-  AiOutlineInfoCircle,
 } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
@@ -20,6 +19,9 @@ import { deleteCategoryData } from '../../api/categoryApi';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import TableLoading from '../../components/Table/TableLoading';
+import TableErrorLoading from '../../components/Table/TableErrorLoading';
+import TableNoData from '../../components/Table/TableNoData';
 
 const Category = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -102,73 +104,46 @@ const Category = () => {
   };
 
   const renderTableContent = () => {
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            Loading...
-          </td>
-        </tr>
-      );
-    }
+    if (isLoading) <TableLoading />;
 
-    if (isError) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            Error loading data
-          </td>
-        </tr>
-      );
-    }
+    if (isError) <TableErrorLoading />;
 
-    if (!categoryData || categoryData.length === 0) {
-      return (
-        <tr>
-          <td colSpan={2} className="py-5 text-center">
-            <div className="flex flex-col items-center">
-              <AiOutlineInfoCircle size={40} className="text-gray-500 mb-4" />
-              <p className="text-lg text-gray-500">
-                No Category data available.
-              </p>
+    if (categoryData && categoryData.length > 0) {
+      return categoryData.map((category) => (
+        <tr key={category.id}>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {category.name}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {category.description}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
+              <button
+                className="hover:text-primary"
+                onClick={() => handleEdit(category)}
+              >
+                <AiOutlineEdit
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(category.id)}
+              >
+                <AiOutlineDelete
+                  size={20}
+                  className="text-gray-700 dark:text-gray-2 cursor-pointer"
+                />
+              </button>
             </div>
           </td>
         </tr>
-      );
+      ));
     }
 
-    return categoryData.map((category) => (
-      <tr key={category.id}>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          {category.name}
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          {category.description}
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <div className="flex items-center space-x-3.5">
-            <button
-              className="hover:text-primary"
-              onClick={() => handleEdit(category)}
-            >
-              <AiOutlineEdit
-                size={20}
-                className="text-gray-700 dark:text-gray-2 cursor-pointer"
-              />
-            </button>
-            <button
-              className="hover:text-primary"
-              onClick={() => handleDelete(category.id)}
-            >
-              <AiOutlineDelete
-                size={20}
-                className="text-gray-700 dark:text-gray-2 cursor-pointer"
-              />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ));
+    return <TableNoData />
   };
 
   return (
