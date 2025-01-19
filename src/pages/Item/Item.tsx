@@ -51,7 +51,11 @@ const Item = () => {
   };
 
   const handleEdit = (record: ItemInterface) => {
-    setEditData(record);
+    setEditData({
+      ...record,
+      uom: record.uom?.id || record.uom,
+      category: record.category?.id || record.category, 
+    });
     openModal('item');
   };
 
