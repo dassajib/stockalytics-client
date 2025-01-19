@@ -87,8 +87,8 @@ const Item = () => {
     if (isError) return <TableErrorLoading />;
 
     if (itemData && itemData.length > 0) {
-      return itemData.map((item, index) => (
-        <tr key={index}>
+      return itemData.map((item) => (
+        <tr key={item.id}>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {item.name}
           </td>
