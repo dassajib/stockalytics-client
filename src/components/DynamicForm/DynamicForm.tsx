@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Select } from 'antd';
 
 interface InputConfig {
@@ -22,7 +22,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   defaultValues,
 }) => {
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, control } = useForm({
     defaultValues,
   });
 
@@ -42,15 +42,22 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {input.label}
           </label>
           {input.type === 'select' ? (
-            <Select
-              {...register(input.name, { required: input.required })}
-              showSearch
-              placeholder={input.placeholder}
-              className="w-full"
-              options={input.options?.map((option) => ({
-                label: option.label,
-                value: option.value,
-              }))}
+            <Controller
+              name={input.name}
+              control={control}
+              rules={{ required: input.required }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  showSearch
+                  placeholder={input.placeholder}
+                  className="w-full"
+                  options={input.options?.map((option) => ({
+                    label: option.label,
+                    value: option.value,
+                  }))}
+                />
+              )}
             />
           ) : (
             <input

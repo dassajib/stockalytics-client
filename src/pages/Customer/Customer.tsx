@@ -115,17 +115,17 @@ const Customer = () => {
     if (customerData && customerData.length > 0) {
       return customerData.map((customer, index) => (
         <tr key={index}>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {customer.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {customer.phone}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {customer.address}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <div className="flex items-center space-x-3.5">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+            <div className="flex items-center justify-center space-x-3.5">
               <button
                 className="hover:text-primary"
                 onClick={() => handleEdit(customer)}
@@ -193,16 +193,16 @@ const Customer = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Name
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Phone
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Address
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Actions
                 </th>
               </tr>

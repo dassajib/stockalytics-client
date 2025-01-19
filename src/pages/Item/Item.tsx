@@ -13,63 +13,22 @@ import {
   useUpdateItem,
 } from '../../hooks/useItemData';
 import { deleteItemData } from '../../api/itemApi';
-import { useUomData } from '../../hooks/useUomData';
-import { useCategoryData } from '../../hooks/useCategoryData';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import TableErrorLoading from '../../components/Table/TableErrorLoading';
 import TableLoading from '../../components/Table/TableLoading';
 import TableNoData from '../../components/Table/TableNoData';
+import useItemFormConfig from '../../config/useItemFormConfig';
 
 const Item = () => {
   const { modalType, openModal, closeModal } = useModalStore();
   const { data: itemData, isLoading, isError, refetch } = useItemData();
-  const { data: uomData } = useUomData();
-  const { data: categoryData } = useCategoryData();
+  const formConfig = useItemFormConfig();
   const postItem = usePostItem();
   const updateItem = useUpdateItem();
 
   const [editData, setEditData] = useState<ItemInterface | null>(null);
-
-  const formConfig = [
-    {
-      name: 'name',
-      type: 'text',
-      label: 'Name',
-      placeholder: 'Enter your Item name',
-      required: true,
-    },
-    {
-      name: 'description',
-      type: 'text',
-      label: 'Description',
-      placeholder: 'Enter your Item description',
-      required: true,
-    },
-    {
-      name: 'category',
-      type: 'select',
-      label: 'Category',
-      placeholder: 'Select a Category',
-      options: categoryData?.map((category) => ({
-        label: category.name,
-        value: category.id,
-      })),
-      required: true,
-    },
-    {
-      name: 'uom',
-      type: 'select',
-      label: 'UOM',
-      placeholder: 'Select a UOM',
-      options: uomData?.map((uom) => ({
-        label: uom.name,
-        value: uom.id,
-      })),
-      required: true,
-    },
-  ];
 
   const handleSubmit = async (data: any) => {
     try {
@@ -124,27 +83,26 @@ const Item = () => {
   };
 
   const renderTableRows = () => {
-    if (isLoading) <TableLoading />;
-
-    if (isError) <TableErrorLoading />;
+    if (isLoading) return <TableLoading />;
+    if (isError) return <TableErrorLoading />;
 
     if (itemData && itemData.length > 0) {
       return itemData.map((item, index) => (
         <tr key={index}>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {item.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             {item.description}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.uom}
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+            {item.uom.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.category}
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+            {item.category.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <div className="flex items-center space-x-3.5">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+            <div className="flex items-center justify-center space-x-3.5">
               <button
                 className="hover:text-primary"
                 onClick={() => handleEdit(item)}
@@ -212,17 +170,20 @@ const Item = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Name
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Description
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Uom
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                   Category
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                  Actions
                 </th>
               </tr>
             </thead>
