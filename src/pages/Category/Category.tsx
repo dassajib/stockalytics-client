@@ -112,7 +112,7 @@ const Category = () => {
             {category.name}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
-            {category.description}
+            {category.description || 'n/a'}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
             <div className="flex items-center justify-center space-x-3.5">
