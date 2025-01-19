@@ -89,20 +89,20 @@ const Item = () => {
     if (itemData && itemData.length > 0) {
       return itemData.map((item) => (
         <tr key={item.id}>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {item.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {item.description}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {item.uom.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {item.category.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
-            <div className="flex items-center justify-center space-x-3.5">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
               <button
                 className="hover:text-primary"
                 onClick={() => handleEdit(item)}
@@ -141,7 +141,7 @@ const Item = () => {
           />
           <Button
             onClick={openCreateModal}
-            className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
+            className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Item
           </Button>
@@ -167,19 +167,19 @@ const Item = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Name
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Description
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Uom
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Category
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
                 </th>
               </tr>

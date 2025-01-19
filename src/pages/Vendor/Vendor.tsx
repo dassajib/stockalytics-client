@@ -114,17 +114,17 @@ const Vendor = () => {
     if (vendorData && vendorData.length > 0) {
       return vendorData.map((vendor, index) => (
         <tr key={index}>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {vendor.name}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {vendor.phone}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {vendor.address}
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark text-center">
-            <div className="flex items-center justify-center space-x-3.5">
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            <div className="flex items-center space-x-3.5">
               <button
                 className="hover:text-primary"
                 onClick={() => handleEdit(vendor)}
@@ -167,7 +167,7 @@ const Vendor = () => {
 
           <Button
             onClick={openCreateModal}
-            className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
+            className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Vendor
           </Button>
@@ -194,16 +194,16 @@ const Vendor = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Name
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Phone
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Address
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
                 </th>
               </tr>
