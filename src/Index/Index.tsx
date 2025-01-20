@@ -26,6 +26,7 @@ const SalesReportListing = lazy(
 const Vendor = lazy(() => import('../pages/Vendor/Vendor'));
 const Customer = lazy(() => import('../pages/Customer/Customer'));
 import Loader from '../components/Loader';
+import Purchase from '../pages/Purchase/Purchase';
 
 const Index = () => {
   const { pathname } = useLocation();
@@ -57,6 +58,7 @@ const Index = () => {
             element={<SalesReportListing />}
           />
           <Route path="vendor" element={<Vendor />} />
+          <Route path="purchase" element={<Purchase />} />
           <Route path="customer" element={<Customer />} />
         </Route>
       </Routes>
