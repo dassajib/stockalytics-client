@@ -100,10 +100,10 @@ const Item = () => {
             {item.description}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.uom.name}
+            {item.uom}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.category.name}
+            {item.category}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             <div className="flex items-center space-x-3.5">
