@@ -14,12 +14,12 @@ import {
 } from '../../hooks/usePurchaseData';
 import { deletePurchaseData } from '../../api/purchaseAPI';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import DynamicForm from '../../components/DynamicForm/DynamicForm';
 import Modal from '../../components/Modal/Modal';
 import TableNoData from '../../components/Table/TableNoData';
 import TableLoading from '../../components/Table/TableLoading';
 import TableErrorLoading from '../../components/Table/TableErrorLoading';
 import usePurchaseFormConfig from '../../config/usePurchaseFormConfig';
+import PurchaseForm from '../../components/PurchaseForm/PurchaseForm';
 
 const Purchase = () => {
   const { modalType, openModal, closeModal } = useModalStore();
@@ -150,10 +150,10 @@ const Purchase = () => {
                   icon={<CloseOutlined />}
                   size="large"
                 />
-                <DynamicForm
-                  inputs={formConfig}
-                  onSubmit={handleSubmit}
-                  defaultValues={editData || {}}
+                <PurchaseForm
+                  // inputs={formConfig}
+                  // onSubmit={handleSubmit}
+                  // defaultValues={editData || {}}
                 />
               </div>
             </Modal>
