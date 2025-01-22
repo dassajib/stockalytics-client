@@ -91,8 +91,8 @@ const Uom = () => {
   };
 
   const renderTableContent = () => {
-    if (isLoading) <TableLoading />;
-    if (isError) <TableErrorLoading />;
+    if (isLoading) return <TableLoading />;
+    if (isError) return <TableErrorLoading />;
 
     if (uomData && uomData.length > 0) {
       return uomData.map((uom) => (

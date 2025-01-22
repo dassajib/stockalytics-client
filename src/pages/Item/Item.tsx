@@ -54,7 +54,7 @@ const Item = () => {
     setEditData({
       ...record,
       uom: record.uom?.id || record.uom,
-      category: record.category?.id || record.category, 
+      category: record.category?.id || record.category,
     });
     openModal('item');
   };
@@ -100,10 +100,10 @@ const Item = () => {
             {item.description}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.uom}
+            {item.uom?.name}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.category}
+            {item.category?.name}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             <div className="flex items-center space-x-3.5">

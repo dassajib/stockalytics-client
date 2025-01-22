@@ -21,7 +21,7 @@ const useItemFormConfig = () => {
       required: true,
     },
     {
-      name: 'uom',
+      name: 'uomId',
       type: 'select',
       label: 'UOM',
       placeholder: 'Select a UOM',
@@ -32,7 +32,7 @@ const useItemFormConfig = () => {
       required: true,
     },
     {
-      name: 'category',
+      name: 'categoryId',
       type: 'select',
       label: 'Category',
       placeholder: 'Select a Category',
