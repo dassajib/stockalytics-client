@@ -32,12 +32,22 @@ const Item = () => {
 
   const handleSubmit = async (data: any) => {
     try {
+      console.log('Form Data before submitting:', data);
+
+      const updatedData = {
+        ...data,
+        uomId: data.uomId ? data.uomId : '', 
+        categoryId: data.categoryId ? data.categoryId : '', 
+      };
+
       if (editData) {
-        await updateItem.mutateAsync({ id: editData.id, data });
+        console.log('Updating item with:', updatedData);
+        await updateItem.mutateAsync({ id: editData.id, data: updatedData });
       } else {
-        await postItem.mutateAsync(data);
+        await postItem.mutateAsync(updatedData);
         toast.success(`New Item ${data.name} is added`);
       }
+
       closeModalAndReset();
       refetch();
     } catch (error) {
@@ -53,8 +63,11 @@ const Item = () => {
   const handleEdit = (record: ItemInterface) => {
     setEditData({
       ...record,
-      uom: record.uom?.id || record.uom,
-      category: record.category?.id || record.category,
+      uomId: typeof record.uom === 'object' ? record.uom.id : record.uom,
+      categoryId:
+        typeof record.category === 'object'
+          ? record.category.id
+          : record.category,
     });
     openModal('item');
   };
@@ -67,7 +80,7 @@ const Item = () => {
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'This action cannot be undone!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -75,12 +88,14 @@ const Item = () => {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
     });
+
     if (result.isConfirmed) {
       try {
         await deleteItemData(id);
-        Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+        toast.success('Item deleted successfully');
         refetch();
       } catch (error) {
+        toast.error('Failed to delete item');
         console.error('Error deleting item:', error);
       }
     }
@@ -91,7 +106,7 @@ const Item = () => {
     if (isError) return <TableErrorLoading />;
 
     if (itemData && itemData.length > 0) {
-      return itemData.map((item) => (
+      return itemData.map((item: ItemInterface) => (
         <tr key={item.id}>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {item.name}
@@ -100,10 +115,12 @@ const Item = () => {
             {item.description}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.uom?.name}
+            {typeof item.uom === 'object' ? item.uom.name : item.uom}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.category?.name}
+            {typeof item.category === 'object'
+              ? item.category.name
+              : item.category}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             <div className="flex items-center space-x-3.5">

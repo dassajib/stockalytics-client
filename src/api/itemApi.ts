@@ -1,28 +1,21 @@
 import axiosInstance from './axiosInstance';
-import { ItemInterface } from '../interface/item';
 
-export const fetchItemData = async (): Promise<ItemInterface[]> => {
-    const response = await axiosInstance.get('/item');
-    return response.data;
+export const fetchItemData = async () => {
+    const { data } = await axiosInstance.get('/item');
+    return data;
 };
 
-export const postItemData = async (data: ItemInterface) => {
+export const postItemData = async (data: any) => {
     const response = await axiosInstance.post('/item', data);
     return response.data;
 };
 
-export const updateItemData = async (id: string, data: { name: string }) => {
+export const updateItemData = async (id: string, data: { name: string, uomId: string, categoryId: string }) => {
+    console.log('Updating item with data:', data);
     const response = await axiosInstance.put(`/item/${id}`, data);
     return response.data;
 };
 
 export const deleteItemData = async (id: string) => {
-    try {
-        const response = await axiosInstance.delete(`/item/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error deleting Item:', error);
-        throw error;
-    }
+    await axiosInstance.delete(`/item/${id}`);
 };
-
