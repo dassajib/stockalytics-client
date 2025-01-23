@@ -32,8 +32,6 @@ const Item = () => {
 
   const handleSubmit = async (data: any) => {
     try {
-      console.log('Form Data before submitting:', data);
-
       const updatedData = {
         ...data,
         uomId: data.uomId ? data.uomId : '', 

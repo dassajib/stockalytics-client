@@ -40,7 +40,7 @@ const PurchaseForm: React.FC = () => {
           <Form.Item label="Vendor" name="vendor">
             <Select
               showSearch
-              className="w-full"
+              // className="bg-white dark:bg-[#24303F] dark:text-white text-gray-900 mt-1 block w-full shadow-sm sm:text-sm border-[1.5px] border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
               placeholder="Select Vendor"
               onChange={(value) => console.log(value)}
             >
