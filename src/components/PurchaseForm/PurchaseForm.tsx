@@ -32,15 +32,47 @@ const PurchaseForm: React.FC = () => {
     );
   };
 
+  const calculateTotal = () => {
+    return items.reduce((total, item) => {
+      const qty = parseFloat(item.qty) || 0;
+      const price = parseFloat(item.price) || 0;
+      return total + qty * price;
+    }, 0);
+  };
+
+  const handleSubmit = () => {
+    if (items.some((item) => !item.item || !item.qty || !item.price)) {
+      alert('Please fill all fields before submitting.');
+      return;
+    }
+
+    const submittedData = {
+      vendor: 'Vendor Name', // Replace with selected vendor value
+      items,
+      total: calculateTotal(),
+    };
+
+    console.log('Form Data:', submittedData);
+    alert('Purchase data submitted successfully!');
+  };
+
+  const getDisabledItems = (currentId: number) => {
+    const selectedItems = items.filter((item) => item.id !== currentId);
+    return selectedItems.map((item) => item.item);
+  };
+
   return (
-    <Form layout="vertical" className="max-w-md">
+    <Form layout="vertical" className="max-w-md" onFinish={handleSubmit}>
       {/* Vendor Row */}
       <Row gutter={16}>
         <Col span={18}>
-          <Form.Item label="Vendor" name="vendor">
+          <Form.Item
+            label="Vendor"
+            name="vendor"
+            rules={[{ required: true, message: 'Please select a vendor' }]}
+          >
             <Select
               showSearch
-              // className="bg-white dark:bg-[#24303F] dark:text-white text-gray-900 mt-1 block w-full shadow-sm sm:text-sm border-[1.5px] border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
               placeholder="Select Vendor"
               onChange={(value) => console.log(value)}
             >
@@ -54,22 +86,31 @@ const PurchaseForm: React.FC = () => {
 
       {/* Items Rows */}
       {items.map((item) => (
-        <Row key={item.id} gutter={16} className="">
+        <Row key={item.id} gutter={16}>
           <Col span={6}>
             <Form.Item
               label="Item"
               name={`item-${item.id}`}
-              className="block text-sm font-medium dark:text-[#ECEDEF] text-[#1C2434]"
+              rules={[{ required: true, message: 'Please select an item' }]}
             >
               <Select
                 showSearch
-                className="w-full"
                 placeholder="Select Item"
                 value={item.item}
                 onChange={(value) => handleChange(value, 'item', item.id)}
               >
-                <Option value="item1">Item 1</Option>
-                <Option value="item2">Item 2</Option>
+                <Option
+                  value="item1"
+                  disabled={getDisabledItems(item.id).includes('item1')}
+                >
+                  Item 1
+                </Option>
+                <Option
+                  value="item2"
+                  disabled={getDisabledItems(item.id).includes('item2')}
+                >
+                  Item 2
+                </Option>
                 {/* Add more items */}
               </Select>
             </Form.Item>
@@ -79,11 +120,10 @@ const PurchaseForm: React.FC = () => {
             <Form.Item
               label="Quantity"
               name={`qty-${item.id}`}
-              className="block text-sm font-medium dark:text-[#ECEDEF] text-[#1C2434]"
+              rules={[{ required: true, message: 'Please enter a quantity' }]}
             >
               <Input
                 type="number"
-                className="w-full"
                 placeholder="Qty"
                 value={item.qty}
                 min={0}
@@ -96,11 +136,10 @@ const PurchaseForm: React.FC = () => {
             <Form.Item
               label="Price"
               name={`price-${item.id}`}
-              className="block text-sm font-medium dark:text-[#ECEDEF] text-[#1C2434]"
+              rules={[{ required: true, message: 'Please enter a price' }]}
             >
               <Input
                 type="number"
-                className="w-full"
                 placeholder="Price"
                 value={item.price}
                 min={0}
@@ -113,13 +152,11 @@ const PurchaseForm: React.FC = () => {
             <Space>
               <Button
                 type="primary"
-                className="dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300"
                 icon={<PlusOutlined />}
                 onClick={handleAddItem}
               />
               {items.length > 1 && (
                 <Button
-                  className="dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300"
                   type="danger"
                   icon={<MinusOutlined />}
                   onClick={() => handleRemoveItem(item.id)}
@@ -130,31 +167,20 @@ const PurchaseForm: React.FC = () => {
         </Row>
       ))}
 
+      {/* Total Row */}
       <Row>
         <Col span={23} className="flex justify-end">
-          <Form.Item
-            label="Total"
-            className="block text-sm font-medium dark:text-[#ECEDEF] text-[#1C2434]"
-          >
-            <Input
-              type="text"
-              className="w-1/2"
-              placeholder="Total"
-              //   value={item.total}
-              disabled
-            />
+          <Form.Item label="Total">
+            <Input type="text" value={calculateTotal()} disabled />
           </Form.Item>
         </Col>
       </Row>
 
       {/* Submit Button */}
       <div className="flex justify-center">
-        <button
-          type="submit"
-          className="w-full mt-6 px-4 py-2 dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300"
-        >
+        <Button type="primary" htmlType="submit" className="w-full mt-6">
           Submit
-        </button>
+        </Button>
       </div>
     </Form>
   );
