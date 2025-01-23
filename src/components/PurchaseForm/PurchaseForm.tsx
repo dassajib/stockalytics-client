@@ -47,7 +47,7 @@ const PurchaseForm: React.FC = () => {
     }
 
     const submittedData = {
-      vendor: 'Vendor Name', // Replace with selected vendor value
+      vendor: 'Vendor Name',
       items,
       total: calculateTotal(),
     };
