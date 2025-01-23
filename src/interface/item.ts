@@ -2,8 +2,8 @@ export interface ItemInterface {
     id: string;
     name: string;
     description: string;
-    uom: string | { id: string; name: string };
-    category: string | { id: string; name: string };
+    uom: string;
+    category: string;
     uomId?: string;
     categoryId?: string;
 }

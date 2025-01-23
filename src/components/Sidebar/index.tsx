@@ -7,6 +7,7 @@ import { AiOutlineDollar } from 'react-icons/ai';
 import { IoMdMove } from 'react-icons/io';
 import { BiSolidReport } from 'react-icons/bi';
 import { IoIosArrowDown } from 'react-icons/io';
+import { FaShoppingCart } from "react-icons/fa";
 import { FaUsers } from 'react-icons/fa6';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -382,7 +383,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
-                  <IoMdMove size={20} />
+                  <FaShoppingCart size={20} />
                   Purchase
                 </NavLink>
               </li>

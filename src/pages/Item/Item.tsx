@@ -32,24 +32,19 @@ const Item = () => {
 
   const handleSubmit = async (data: any) => {
     try {
-      const updatedData = {
-        ...data,
-        uomId: data.uomId ? data.uomId : '',
-        categoryId: data.categoryId ? data.categoryId : '',
-      };
-
+      const updatedData = { ...data };
       if (editData) {
-        console.log('Updating item with:', updatedData);
         await updateItem.mutateAsync({ id: editData.id, data: updatedData });
+        toast.success(`Item ${data.name} updated successfully`);
       } else {
         await postItem.mutateAsync(updatedData);
         toast.success(`New Item ${data.name} is added`);
       }
-
       closeModalAndReset();
       refetch();
     } catch (error) {
       console.error('Error submitting data:', error);
+      toast.error('Failed to submit data');
     }
   };
 
@@ -61,11 +56,8 @@ const Item = () => {
   const handleEdit = (record: ItemInterface) => {
     setEditData({
       ...record,
-      uomId: typeof record.uom === 'object' ? record.uom.id : record.uom,
-      categoryId:
-        typeof record.category === 'object'
-          ? record.category.id
-          : record.category,
+      uomId: record.uom?.id || '',
+      categoryId: record.category?.id || '',
     });
     openModal('item');
   };
@@ -110,15 +102,13 @@ const Item = () => {
             {item.name}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {item.description}
+            {item.description || 'N/A'}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {typeof item.uom === 'object' ? item.uom.name : item.uom}
+            {item.uom?.name || 'N/A'}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {typeof item.category === 'object'
-              ? item.category.name
-              : item.category}
+            {item.category?.name || 'N/A'}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             <div className="flex items-center space-x-3.5">

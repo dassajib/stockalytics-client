@@ -56,13 +56,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     label: option.label,
                     value: option.value,
                   }))}
-                  filterOption={(inputValue, option) =>
-                    option
-                      ? option.label
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      : false
-                  }
+                  filterOption={(inputValue, option) => {
+                    return (
+                      option?.label
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase()) ?? false
+                    );
+                  }}
+                  onChange={(value) => field.onChange(value)}
                 />
               )}
             />
