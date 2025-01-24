@@ -32,12 +32,18 @@ const Item = () => {
 
   const handleSubmit = async (data: any) => {
     try {
-      const updatedData = { ...data };
       if (editData) {
-        await updateItem.mutateAsync({ id: editData.id, data: updatedData });
+        const updatedData = {
+          name: data!.name,
+          description: data!.description,
+          uom: data!.uomId,
+          category: data!.categoryId,
+        };
+        await updateItem.mutateAsync({ id: data.id, data: updatedData });
         toast.success(`Item ${data.name} updated successfully`);
       } else {
-        await postItem.mutateAsync(updatedData);
+        const createData = { ...data };
+        await postItem.mutateAsync(createData);
         toast.success(`New Item ${data.name} is added`);
       }
       closeModalAndReset();
@@ -59,6 +65,7 @@ const Item = () => {
       uomId: record.uom?.id || '',
       categoryId: record.category?.id || '',
     });
+    console.log('record', record);
     openModal('item');
   };
 

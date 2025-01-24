@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Select } from 'antd';
 
@@ -22,17 +22,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   defaultValues,
 }) => {
-  const { register, handleSubmit, setValue, control } = useForm({
+  const { register, handleSubmit, control } = useForm({
     defaultValues,
   });
-
-  useEffect(() => {
-    if (defaultValues) {
-      for (const key in defaultValues) {
-        setValue(key, defaultValues[key]);
-      }
-    }
-  }, [defaultValues, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-8">
@@ -63,7 +55,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                         .includes(inputValue.toLowerCase()) ?? false
                     );
                   }}
-                  onChange={(value) => field.onChange(value)}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    console.log('onsbit', value);
+                  }}
                 />
               )}
             />

@@ -4,7 +4,7 @@ import { ItemInterface, UpdateItemInterface } from '../interface/item';
 
 export const useItemData = () => {
     return useQuery<ItemInterface[], Error>('itemData', fetchItemData, {
-        staleTime: 0, 
+        staleTime: 0,
     });
 };
 
