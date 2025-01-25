@@ -23,9 +23,9 @@ import PurchaseForm from '../../components/PurchaseForm/PurchaseForm';
 
 const Purchase = () => {
   const { modalType, openModal, closeModal } = useModalStore();
+  const formConfig = usePurchaseFormConfig();
   const postPurchase = usePostPurchase();
   const updatePurchase = useUpdatePurchase();
-  const formConfig = usePurchaseFormConfig();
   const { data: purchaseData, isLoading, isError, refetch } = usePurchaseData();
   const [editData, setEditData] = useState<PurchaseInterface | null>(null);
 
@@ -151,9 +151,9 @@ const Purchase = () => {
                   size="large"
                 />
                 <PurchaseForm
-                // inputs={formConfig}
-                // onSubmit={handleSubmit}
-                // defaultValues={editData || {}}
+                  inputs={formConfig}
+                  onSubmit={handleSubmit}
+                  defaultValues={editData || {}}
                 />
               </div>
             </Modal>

@@ -52,7 +52,7 @@ const PurchaseForm: React.FC = () => {
       total: calculateTotal(),
     };
 
-    // console.log('Form Data:', submittedData);
+    console.log('Form Data:', submittedData);
     alert('Purchase data submitted successfully!');
   };
 

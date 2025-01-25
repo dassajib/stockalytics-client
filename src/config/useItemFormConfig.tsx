@@ -33,7 +33,7 @@ const useItemFormConfig = () => {
       {
         name: 'uomId',
         type: 'select',
-        label: 'UOM',
+        label: 'Uom',
         placeholder: isUomLoading ? 'Loading UOM...' : 'Select a UOM',
         options: uomData.map((uom) => ({
           label: uom.name,
