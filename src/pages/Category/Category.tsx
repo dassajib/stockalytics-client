@@ -45,20 +45,37 @@ const Category = () => {
     },
   ];
 
-  const handleSubmit = async (data: any) => {
+  const handleCreate = async (data: any) => {
+    try {
+      await postCategory.mutateAsync(data);
+      toast.success(`New category ${data.name} is added`);
+      closeModalAndReset();
+      refetch();
+    } catch (error) {
+      // console.error('Error creating category:', error);
+      toast.error('Error creating category.');
+    }
+  };
+
+  const handleEditSubmit = async (data: any) => {
     try {
       if (editData) {
         await updateCategory.mutateAsync({ id: editData.id, data });
         toast.success(`Category ${data.name} updated successfully.`);
-      } else {
-        await postCategory.mutateAsync(data);
-        toast.success(`New category ${data.name} is added`);
+        closeModalAndReset();
+        refetch();
       }
-      closeModalAndReset();
-      refetch();
     } catch (error) {
-      console.error('Error submitting data:', error);
-      toast.error('Error submitting data.');
+      // console.error('Error updating category:', error);
+      toast.error('Error updating category.');
+    }
+  };
+
+  const handleFormSubmit = (data: any) => {
+    if (editData) {
+      handleEditSubmit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -173,7 +190,7 @@ const Category = () => {
                 />
                 <DynamicForm
                   inputs={formConfig}
-                  onSubmit={handleSubmit}
+                  onSubmit={handleFormSubmit}
                   defaultValues={editData || {}}
                 />
               </div>

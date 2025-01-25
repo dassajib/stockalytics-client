@@ -30,26 +30,33 @@ const Item = () => {
 
   const [editData, setEditData] = useState<ItemInterface | null>(null);
 
+  const handlePostData = async (data: any) => {
+    const createData = { ...data };
+    await postItem.mutateAsync(createData);
+    toast.success(`New Item ${data.name} is added`);
+  };
+
+  const handleUpdateData = async (data: any) => {
+    const updatedData = {
+      name: data!.name,
+      description: data!.description,
+      uom: data!.uomId,
+      category: data!.categoryId,
+    };
+    await updateItem.mutateAsync({ id: data.id, data: updatedData });
+    toast.success(`Item ${data.name} updated successfully`);
+  };
+
   const handleSubmit = async (data: any) => {
     try {
       if (editData) {
-        const updatedData = {
-          name: data!.name,
-          description: data!.description,
-          uom: data!.uomId,
-          category: data!.categoryId,
-        };
-        await updateItem.mutateAsync({ id: data.id, data: updatedData });
-        toast.success(`Item ${data.name} updated successfully`);
+        await handleUpdateData(data);
       } else {
-        const createData = { ...data };
-        await postItem.mutateAsync(createData);
-        toast.success(`New Item ${data.name} is added`);
+        await handlePostData(data);
       }
       closeModalAndReset();
       refetch();
     } catch (error) {
-      console.error('Error submitting data:', error);
       toast.error('Failed to submit data');
     }
   };
@@ -65,7 +72,6 @@ const Item = () => {
       uomId: record.uom?.id || '',
       categoryId: record.category?.id || '',
     });
-    console.log('record', record);
     openModal('item');
   };
 
@@ -93,7 +99,6 @@ const Item = () => {
         refetch();
       } catch (error) {
         toast.error('Failed to delete item');
-        console.error('Error deleting item:', error);
       }
     }
   };

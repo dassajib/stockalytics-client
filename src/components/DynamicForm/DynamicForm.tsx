@@ -55,10 +55,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                         .includes(inputValue.toLowerCase()) ?? false
                     );
                   }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    console.log('onsbit', value);
-                  }}
+                  onChange={(value) => field.onChange(value)}
                 />
               )}
             />

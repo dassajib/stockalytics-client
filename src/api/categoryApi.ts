@@ -24,7 +24,6 @@ export const deleteCategoryData = async (id: string) => {
     const response = await axiosInstance.delete(`/category/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error deleting Category:', error);
     throw error;
   }
 };

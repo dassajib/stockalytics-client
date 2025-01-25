@@ -34,20 +34,29 @@ const Uom = () => {
     },
   ];
 
-  const handleSubmit = async (data: any) => {
+  const handleCreate = async (data: any) => {
+    try {
+      await postUom.mutateAsync(data);
+      toast.success(`New UOM ${data.name} added successfully.`);
+      closeModalAndReset();
+      refetch();
+    } catch (error) {
+      // console.error('Error creating UOM:', error);
+      toast.error('Error creating UOM.');
+    }
+  };
+
+  const handleEditSubmit = async (data: any) => {
     try {
       if (editData) {
         await updateUom.mutateAsync({ id: editData.id, data });
         toast.success(`UOM ${data.name} updated successfully.`);
-      } else {
-        await postUom.mutateAsync(data);
-        toast.success(`New UOM ${data.name} added successfully.`);
+        closeModalAndReset();
+        refetch();
       }
-      closeModalAndReset();
-      refetch();
     } catch (error) {
-      console.error('Error submitting data:', error);
-      toast.error('Error submitting data.');
+      // console.error('Error updating UOM:', error);
+      toast.error('Error updating UOM.');
     }
   };
 
@@ -84,9 +93,16 @@ const Uom = () => {
         Swal.fire('Deleted!', 'The UOM has been deleted.', 'success');
         refetch();
       } catch (error) {
-        console.error('Error deleting UOM:', error);
         Swal.fire('Error!', 'Failed to delete the UOM.', 'error');
       }
+    }
+  };
+
+  const handleFormSubmit = (data: any) => {
+    if (editData) {
+      handleEditSubmit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -158,7 +174,7 @@ const Uom = () => {
                 />
                 <DynamicForm
                   inputs={formConfig}
-                  onSubmit={handleSubmit}
+                  onSubmit={handleFormSubmit}
                   defaultValues={editData || {}}
                 />
               </div>

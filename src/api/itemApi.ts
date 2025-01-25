@@ -26,7 +26,6 @@ export const updateItemData = async (
         category: string;
     },
 ) => {
-    console.log('Updating item with data:', data);
     const response = await axiosInstance.put(`/item/${id}`, data);
     return response.data;
 };

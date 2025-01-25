@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Button, Input } from 'antd';
-import {
-  AiOutlineDelete,
-  AiOutlineEdit,
-} from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
@@ -55,18 +52,27 @@ const Customer = () => {
     },
   ];
 
-  const handleSubmit = async (data: any) => {
+  const handlePostCustomer = async (data: any) => {
     try {
-      if (editData) {
-        await updateCustomer.mutateAsync({ id: editData.id, data });
-      } else {
-        await postCustomer.mutateAsync(data);
-        toast.success(`New Customer ${data.name} is added`);
-      }
+      await postCustomer.mutateAsync(data);
+      toast.success(`New Customer ${data.name} is added`);
       closeModalAndReset();
       refetch();
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('Error creating customer:', error);
+    }
+  };
+
+  const handleEditCustomer = async (data: any) => {
+    try {
+      if (editData) {
+        await updateCustomer.mutateAsync({ id: editData.id, data });
+        toast.success(`Customer ${data.name} has been updated`);
+        closeModalAndReset();
+        refetch();
+      }
+    } catch (error) {
+      console.error('Error editing customer:', error);
     }
   };
 
@@ -107,10 +113,18 @@ const Customer = () => {
     }
   };
 
-  const renderTableRows = () => {
-    if (isLoading) <TableLoading />;
+  const handleSubmit = (data: any) => {
+    if (editData) {
+      handleEditCustomer(data);
+    } else {
+      handlePostCustomer(data);
+    }
+  };
 
-    if (isError) <TableErrorLoading />;
+  const renderTableRows = () => {
+    if (isLoading) return <TableLoading />;
+
+    if (isError) return <TableErrorLoading />;
 
     if (customerData && customerData.length > 0) {
       return customerData.map((customer, index) => (

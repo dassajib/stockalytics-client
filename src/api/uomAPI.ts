@@ -12,7 +12,6 @@ export const postUomData = async (data: UomInterface) => {
 };
 
 export const updateUomData = async (id: string, data: { name: string }) => {
-  console.log(data)
   const response = await axiosInstance.patch(`/uom/${id}`, data);
   return response.data;
 };
@@ -22,7 +21,6 @@ export const deleteUomData = async (id: string) => {
     const response = await axiosInstance.delete(`/uom/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error deleting UOM:', error);
     throw error;
   }
 };

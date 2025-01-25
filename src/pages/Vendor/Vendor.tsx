@@ -52,19 +52,33 @@ const Vendor = () => {
     },
   ];
 
-  const handleSubmit = async (data: any) => {
+  const handlePostVendor = async (data: any) => {
     try {
-      if (editData) {
-        await updateVendor.mutateAsync({ id: editData.id, data });
-      } else {
-        await postVendor.mutateAsync(data);
-        toast.success(`New Vendor ${data.name} is added`);
-      }
-      closeModalAndReset();
-      refetch();
+      await postVendor.mutateAsync(data);
+      toast.success(`New Vendor ${data.name} is added`);
     } catch (error) {
-      console.error('Error submitting data:', error);
+      // console.error('Error posting vendor data:', error);
+      toast.error('Failed to add vendor');
     }
+  };
+
+  const handleUpdateVendor = async (id: string, data: any) => {
+    try {
+      await updateVendor.mutateAsync({ id, data });
+    } catch (error) {
+      // console.error('Error updating vendor data:', error);
+      toast.error('Failed to update vendor');
+    }
+  };
+
+  const handleSubmit = async (data: any) => {
+    if (editData) {
+      await handleUpdateVendor(editData.id, data);
+    } else {
+      await handlePostVendor(data);
+    }
+    closeModalAndReset();
+    refetch();
   };
 
   const openCreateModal = () => {
@@ -100,7 +114,7 @@ const Vendor = () => {
         Swal.fire('Deleted!', 'The vendor has been deleted.', 'success');
         refetch();
       } catch (error) {
-        console.error('Error deleting vendor:', error);
+        // console.error('Error deleting vendor:', error);
         Swal.fire('Error!', 'There was an error deleting the vendor.', 'error');
       }
     }
