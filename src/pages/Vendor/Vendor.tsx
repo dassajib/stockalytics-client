@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input, Pagination } from 'antd';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { CloseOutlined } from '@ant-design/icons';
 import toast from 'react-hot-toast';
@@ -224,6 +224,15 @@ const Vendor = () => {
             </thead>
             <tbody>{renderTableRows()}</tbody>
           </table>
+        </div>
+        {/* Pagination Design */}
+        <div className="flex justify-center mt-5 py-2">
+          <Pagination
+            defaultCurrent={1}
+            total={50}
+            pageSize={10}
+            showSizeChanger={false}
+          />
         </div>
       </div>
     </>

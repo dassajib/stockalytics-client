@@ -52,7 +52,7 @@ const PurchaseForm: React.FC = () => {
       total: calculateTotal(),
     };
 
-    console.log('Form Data:', submittedData);
+    // console.log('Form Data:', submittedData);
     alert('Purchase data submitted successfully!');
   };
 
@@ -151,12 +151,14 @@ const PurchaseForm: React.FC = () => {
           <Col span={3} className="flex items-center justify-between">
             <Space>
               <Button
+                className="dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700"
                 type="primary"
                 icon={<PlusOutlined />}
                 onClick={handleAddItem}
               />
               {items.length > 1 && (
                 <Button
+                  className="dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700"
                   type="danger"
                   icon={<MinusOutlined />}
                   onClick={() => handleRemoveItem(item.id)}
@@ -178,9 +180,12 @@ const PurchaseForm: React.FC = () => {
 
       {/* Submit Button */}
       <div className="flex justify-center">
-        <Button type="primary" htmlType="submit" className="w-full mt-6">
+        <button
+          type="submit"
+          className="mt-6 px-4 py-2 dark:bg-[#3B4ED1] bg-[#3C50E0] hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300"
+        >
           Submit
-        </Button>
+        </button>
       </div>
     </Form>
   );
