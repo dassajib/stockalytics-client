@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Button, Input, Pagination } from 'antd';
+import { Button, Input, Pagination, Drawer } from 'antd';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 
-import { useModalStore } from '../../store/modalStore';
 import {
   useCategoryData,
   usePostCategory,
@@ -14,19 +12,18 @@ import {
 import { CategoryInterface } from '../../interface/category';
 import { deleteCategoryData } from '../../api/categoryApi';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
-import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import TableLoading from '../../components/Table/TableLoading';
 import TableErrorLoading from '../../components/Table/TableErrorLoading';
 import TableNoData from '../../components/Table/TableNoData';
 
 const Category = () => {
-  const { modalType, openModal, closeModal } = useModalStore();
   const { data: categoryData, isLoading, isError, refetch } = useCategoryData();
   const postCategory = usePostCategory();
   const updateCategory = useUpdateCategory();
 
   const [editData, setEditData] = useState<CategoryInterface | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const formConfig = [
     {
@@ -49,10 +46,9 @@ const Category = () => {
     try {
       await postCategory.mutateAsync(data);
       toast.success(`New category ${data.name} is added`);
-      closeModalAndReset();
+      closeDrawerAndReset();
       refetch();
     } catch (error) {
-      // console.error('Error creating category:', error);
       toast.error('Error creating category.');
     }
   };
@@ -62,11 +58,10 @@ const Category = () => {
       if (editData) {
         await updateCategory.mutateAsync({ id: editData.id, data });
         toast.success(`Category ${data.name} updated successfully.`);
-        closeModalAndReset();
+        closeDrawerAndReset();
         refetch();
       }
     } catch (error) {
-      // console.error('Error updating category:', error);
       toast.error('Error updating category.');
     }
   };
@@ -79,19 +74,19 @@ const Category = () => {
     }
   };
 
-  const openCreateModal = () => {
+  const openCreateDrawer = () => {
     setEditData(null);
-    openModal('category');
+    setDrawerVisible(true);
   };
 
   const handleEdit = (record: CategoryInterface) => {
     setEditData(record);
-    openModal('category');
+    setDrawerVisible(true);
   };
 
-  const closeModalAndReset = () => {
+  const closeDrawerAndReset = () => {
     setEditData(null);
-    closeModal();
+    setDrawerVisible(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -118,9 +113,9 @@ const Category = () => {
   };
 
   const renderTableContent = () => {
-    if (isLoading) <TableLoading />;
+    if (isLoading) return <TableLoading />;
 
-    if (isError) <TableErrorLoading />;
+    if (isError) return <TableErrorLoading />;
 
     if (categoryData && categoryData.length > 0) {
       return categoryData.map((category) => (
@@ -174,28 +169,11 @@ const Category = () => {
           />
 
           <Button
-            onClick={openCreateModal}
+            onClick={openCreateDrawer}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Category
           </Button>
-          {modalType === 'category' && (
-            <Modal>
-              <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
-                <Button
-                  onClick={closeModalAndReset}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                  icon={<CloseOutlined />}
-                  size="large"
-                />
-                <DynamicForm
-                  inputs={formConfig}
-                  onSubmit={handleFormSubmit}
-                  defaultValues={editData || {}}
-                />
-              </div>
-            </Modal>
-          )}
         </div>
         <div className="max-w-full overflow-x-auto mt-10">
           <table className="w-full table-auto">
@@ -205,7 +183,7 @@ const Category = () => {
                   Name
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  description
+                  Description
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -225,6 +203,32 @@ const Category = () => {
           />
         </div>
       </div>
+
+      <Drawer
+        title={
+          <div className="text-black dark:text-white text-xl font-semibold text-center">
+            {editData ? 'Edit Category' : 'Create Category'}
+          </div>
+        }
+        width={480}
+        onClose={closeDrawerAndReset}
+        visible={drawerVisible}
+        destroyOnClose
+        className="bg-white dark:bg-[#24303F]"
+        footer={
+          <div className="flex justify-end">
+            <Button onClick={closeDrawerAndReset} className="mr-2 text-white">
+              Cancel
+            </Button>
+          </div>
+        }
+      >
+        <DynamicForm
+          inputs={formConfig}
+          onSubmit={handleFormSubmit}
+          defaultValues={editData || {}}
+        />
+      </Drawer>
     </>
   );
 };

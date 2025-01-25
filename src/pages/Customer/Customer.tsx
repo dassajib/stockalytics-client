@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Button, Input, Pagination } from 'antd';
+import { Button, Input, Pagination, Drawer } from 'antd';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-import { CloseOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 
 import { CustomerInterface } from '../../interface/customer';
-import { useModalStore } from '../../store/modalStore';
 import {
   useCustomerData,
   usePostCustomer,
@@ -14,19 +12,18 @@ import {
 } from '../../hooks/useCustomerData';
 import { deleteCustomerData } from '../../api/customerAPI';
 import DynamicForm from '../../components/DynamicForm/DynamicForm';
-import Modal from '../../components/Modal/Modal';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import TableLoading from '../../components/Table/TableLoading';
 import TableErrorLoading from '../../components/Table/TableErrorLoading';
 import TableNoData from '../../components/Table/TableNoData';
 
 const Customer = () => {
-  const { modalType, openModal, closeModal } = useModalStore();
   const { data: customerData, isLoading, isError, refetch } = useCustomerData();
   const postCustomer = usePostCustomer();
   const updateCustomer = useUpdateCustomer();
 
   const [editData, setEditData] = useState<CustomerInterface | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const formConfig = [
     {
@@ -56,7 +53,7 @@ const Customer = () => {
     try {
       await postCustomer.mutateAsync(data);
       toast.success(`New Customer ${data.name} is added`);
-      closeModalAndReset();
+      closeDrawerAndReset();
       refetch();
     } catch (error) {
       console.error('Error creating customer:', error);
@@ -68,7 +65,7 @@ const Customer = () => {
       if (editData) {
         await updateCustomer.mutateAsync({ id: editData.id, data });
         toast.success(`Customer ${data.name} has been updated`);
-        closeModalAndReset();
+        closeDrawerAndReset();
         refetch();
       }
     } catch (error) {
@@ -76,19 +73,19 @@ const Customer = () => {
     }
   };
 
-  const openCreateModal = () => {
+  const openCreateDrawer = () => {
     setEditData(null);
-    openModal('customer');
+    setDrawerVisible(true);
   };
 
   const handleEdit = (record: CustomerInterface) => {
     setEditData(record);
-    openModal('customer');
+    setDrawerVisible(true);
   };
 
-  const closeModalAndReset = () => {
+  const closeDrawerAndReset = () => {
     setEditData(null);
-    closeModal();
+    setDrawerVisible(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -180,29 +177,13 @@ const Customer = () => {
             placeholder="Search Your Customer..."
           />
           <Button
-            onClick={openCreateModal}
+            onClick={openCreateDrawer}
             className="inline-flex items-center justify-center rounded-md bg-primary py-6 px-4 font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-20"
           >
             Create Customer
           </Button>
-          {modalType === 'customer' && (
-            <Modal>
-              <div className="relative p-6 bg-[#EFF4FB] dark:bg-[#313D4A] rounded-lg shadow-xl">
-                <Button
-                  onClick={closeModalAndReset}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                  icon={<CloseOutlined />}
-                  size="large"
-                />
-                <DynamicForm
-                  inputs={formConfig}
-                  onSubmit={handleSubmit}
-                  defaultValues={editData || {}}
-                />
-              </div>
-            </Modal>
-          )}
         </div>
+
         <div className="max-w-full overflow-x-auto mt-10">
           <table className="w-full table-auto">
             <thead>
@@ -224,6 +205,7 @@ const Customer = () => {
             <tbody>{renderTableRows()}</tbody>
           </table>
         </div>
+
         {/* Pagination Design */}
         <div className="flex justify-center mt-5 py-2">
           <Pagination
@@ -234,6 +216,33 @@ const Customer = () => {
           />
         </div>
       </div>
+
+      {/* Drawer for Create/Edit Customer */}
+      <Drawer
+        title={
+          <div className="text-black dark:text-white text-xl font-semibold text-center">
+            {editData ? 'Edit Customer' : 'Create Customer'}
+          </div>
+        }
+        width={480}
+        onClose={closeDrawerAndReset}
+        visible={drawerVisible}
+        destroyOnClose
+        className="bg-white dark:bg-[#24303F]"
+        footer={
+          <div className="flex justify-end">
+            <Button onClick={closeDrawerAndReset} className="mr-2 text-white">
+              Cancel
+            </Button>
+          </div>
+        }
+      >
+        <DynamicForm
+          inputs={formConfig}
+          onSubmit={handleSubmit}
+          defaultValues={editData || {}}
+        />
+      </Drawer>
     </>
   );
 };
