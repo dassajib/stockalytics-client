@@ -16,8 +16,10 @@ export const fetchUomData = async (params: UomQueryParams): Promise<UomResponse>
 
 export const searchUomData = async (name: string, params: UomQueryParams): Promise<UomResponse> => {
   const { start, limit } = params;
-  const response = await axiosInstance.get<UomResponse>("/uom", {
-    params: { name, start, limit },
+
+  // Ensure name is included only if it exists
+  const response = await axiosInstance.get<UomResponse>('/uom', {
+    params: { name: name || undefined, start, limit },
   });
   return response.data;
 };
@@ -40,4 +42,3 @@ export const deleteUomData = async (id: string) => {
     throw error;
   }
 };
-
