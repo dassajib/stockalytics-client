@@ -55,8 +55,8 @@ const Customer = () => {
       toast.success(`New Customer ${data.name} is added`);
       closeDrawerAndReset();
       refetch();
-    } catch (error) {
-      console.error('Error creating customer:', error);
+    } catch (error: any) {
+      toast.error(error?.response.data.message);
     }
   };
 
@@ -226,7 +226,7 @@ const Customer = () => {
         }
         width={480}
         onClose={closeDrawerAndReset}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose
         className="bg-white dark:bg-[#24303F]"
         footer={

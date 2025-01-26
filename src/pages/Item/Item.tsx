@@ -53,8 +53,8 @@ const Item = () => {
       }
       closeDrawerAndReset();
       refetch();
-    } catch (error) {
-      toast.error('Failed to submit data');
+    } catch (error: any) {
+      toast.error(error?.response.data.message);
     }
   };
 
@@ -211,7 +211,7 @@ const Item = () => {
         }
         width={480}
         onClose={closeDrawerAndReset}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose
         className="bg-white dark:bg-[#24303F]"
         footer={

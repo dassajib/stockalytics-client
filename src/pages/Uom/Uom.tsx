@@ -14,12 +14,35 @@ import TableErrorLoading from '../../components/Table/TableErrorLoading';
 import TableNoData from '../../components/Table/TableNoData';
 
 const Uom = () => {
-  const { data: uomData, isLoading, isError, refetch } = useUomData();
-  const postUom = usePostUom();
-  const updateUom = useUpdateUom();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const pageSize = 10;
   const [editData, setEditData] = useState<UomInterface | null>(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const {
+    data: uomData,
+    isLoading,
+    isError,
+    refetch,
+  } = useUomData(
+    {
+      start: (currentPage - 1) * pageSize,
+      limit: pageSize,
+    },
+    searchQuery,
+  ); // Pass search query here
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value); // Update search query on input change
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page); // Update page number
+  };
+
+  const postUom = usePostUom();
+  const updateUom = useUpdateUom();
 
   const formConfig = [
     {
@@ -37,8 +60,8 @@ const Uom = () => {
       toast.success(`New UOM ${data.name} added successfully.`);
       closeDrawerAndReset();
       refetch();
-    } catch (error) {
-      toast.error('Error creating UOM.');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Error adding UOM.');
     }
   };
 
@@ -105,8 +128,8 @@ const Uom = () => {
     if (isLoading) return <TableLoading />;
     if (isError) return <TableErrorLoading />;
 
-    if (uomData && uomData.length > 0) {
-      return uomData.map((uom) => (
+    if (uomData && uomData.uoms && uomData?.uoms?.length > 0) {
+      return uomData.uoms.map((uom: UomInterface) => (
         <tr key={uom.id}>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
             {uom.name}
@@ -151,6 +174,8 @@ const Uom = () => {
           <Input
             className="w-1/2 rounded-lg border-[2.5px] border-gray-300 bg-transparent py-3.5 px-5 text-black placeholder-slate-500 dark:placeholder-slate-400 outline-none transition focus:outline-none active:outline-none disabled:cursor-default disabled:bg-whiter dark:border-gray-600 dark:bg-form-input dark:text-white"
             placeholder="Search Your UOM..."
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
           <Button
             onClick={openCreateDrawer}
@@ -166,14 +191,14 @@ const Uom = () => {
             }
             width={480}
             onClose={closeDrawerAndReset}
-            visible={drawerVisible}
+            open={drawerVisible}
             destroyOnClose
             className="bg-white dark:bg-[#24303F]"
             footer={
               <div className="flex justify-end">
                 <Button
                   onClick={closeDrawerAndReset}
-                  className="mr-2 text-white"
+                  className="inline-flex items-center justify-center rounded-md bg-danger py-2 px-4 font-medium text-white hover:bg-opacity-90 lg:px-4 xl:px-6"
                 >
                   Cancel
                 </Button>
@@ -202,12 +227,17 @@ const Uom = () => {
             <tbody>{renderTableContent()}</tbody>
           </table>
         </div>
-        <div className="flex justify-center mt-5 py-2">
+        <div className="flex justify-center mt-4">
           <Pagination
-            defaultCurrent={1}
-            total={50}
-            pageSize={10}
-            showSizeChanger={false}
+            current={currentPage}
+            total={uomData?.total || 0}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            showTotal={(total) => (
+              <span className="text-black dark:text-white text-sm">
+                Total {total} items
+              </span>
+            )}
           />
         </div>
       </div>

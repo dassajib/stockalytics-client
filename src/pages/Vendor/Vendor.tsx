@@ -297,8 +297,8 @@ const Vendor = () => {
     try {
       await postVendor.mutateAsync(data);
       toast.success(`New Vendor ${data.name} is added`);
-    } catch (error) {
-      toast.error('Failed to add vendor');
+    } catch (error: any) {
+      toast.error(error?.response.data.message);
     }
   };
 
@@ -464,7 +464,7 @@ const Vendor = () => {
         }
         width={480}
         onClose={closeDrawerAndReset}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose
         className="bg-white dark:bg-[#24303F]"
         closeIcon={<CloseOutlined className="text-black dark:text-white" />}

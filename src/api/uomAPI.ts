@@ -1,8 +1,24 @@
 import axiosInstance from './axiosInstance';
-import { UomInterface } from '../interface/uom';
+import { UomInterface, UomResponse } from '../interface/uom';
 
-export const fetchUomData = async (): Promise<UomInterface[]> => {
-  const response = await axiosInstance.get('/uom');
+interface UomQueryParams {
+  start: number;
+  limit: number;
+}
+
+export const fetchUomData = async (params: UomQueryParams): Promise<UomResponse> => {
+  const { start, limit } = params;
+  const response = await axiosInstance.get<UomResponse>('/uom', {
+    params: { start, limit },
+  });
+  return response.data;
+};
+
+export const searchUomData = async (name: string, params: UomQueryParams): Promise<UomResponse> => {
+  const { start, limit } = params;
+  const response = await axiosInstance.get<UomResponse>("/uom", {
+    params: { name, start, limit },
+  });
   return response.data;
 };
 

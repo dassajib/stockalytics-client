@@ -388,7 +388,7 @@ const Purchase = () => {
         }
         width={480}
         onClose={closeDrawerAndReset}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose
         className="bg-white dark:bg-[#24303F]"
         footer={

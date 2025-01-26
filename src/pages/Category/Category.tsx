@@ -48,8 +48,8 @@ const Category = () => {
       toast.success(`New category ${data.name} is added`);
       closeDrawerAndReset();
       refetch();
-    } catch (error) {
-      toast.error('Error creating category.');
+    } catch (error: any) {
+      toast.error(error?.response.data.message);
     }
   };
 
@@ -212,7 +212,7 @@ const Category = () => {
         }
         width={480}
         onClose={closeDrawerAndReset}
-        visible={drawerVisible}
+        open={drawerVisible}
         destroyOnClose
         className="bg-white dark:bg-[#24303F]"
         footer={
