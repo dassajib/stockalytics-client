@@ -21,17 +21,17 @@ const Uom = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const {
-    data: uomData,
-    isLoading,
-    isError,
+    data: uomData = { uoms: [], total: 0 }, // Default empty response
+    isLoading: isLoading,
+    isError: isError,
     refetch,
   } = useUomData(
     {
-      start: (currentPage - 1) * pageSize,
-      limit: pageSize,
+      start: 0,
+      limit: 10,
     },
     searchQuery,
-  ); // Pass search query here
+  );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value); // Update search query on input change
@@ -128,7 +128,7 @@ const Uom = () => {
     if (isLoading) return <TableLoading />;
     if (isError) return <TableErrorLoading />;
 
-    if (uomData && uomData.uoms && uomData?.uoms?.length > 0) {
+    if (uomData && uomData?.uoms?.length > 0) {
       return uomData.uoms.map((uom: UomInterface) => (
         <tr key={uom.id}>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

@@ -10,7 +10,10 @@ interface UomQueryParams {
 export const useUomData = (params: UomQueryParams, searchQuery: string = '') => {
   return useQuery<UomResponse, Error>(
     ['uomData', params, searchQuery],
-    () => (searchQuery.trim() ? searchUomData(searchQuery, params) : fetchUomData(params)), // Dynamically fetch based on the search query
+    () =>
+      searchQuery.trim()
+        ? searchUomData(searchQuery, params)
+        : fetchUomData(params),
     {
       keepPreviousData: true,
     }
